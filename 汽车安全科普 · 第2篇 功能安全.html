@@ -1,0 +1,716 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="dark" />
+    <link rel="icon" href="data:," />
+    <title>功能安全：车“坏了”之后，谁来兜底？</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" />
+    <style>
+      :root{
+        --bg:#0a0e13;
+        --bg2:#0d1319;
+        --panel:#111922;
+        --panel2:#0f161f;
+        --line:#22303f;
+        --line-soft:#1a2634;
+        --ink:#e9eff5;
+        --muted:#9db0c1;
+        --faint:#6d8296;
+        --cyan:#2fd6f2;
+        --cyan-dim:#1b7f96;
+        --green:#3ddc97;
+        --amber:#ffb454;
+        --red:#ff5d5d;
+        --red-deep:#c93a3a;
+        --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+        --sans:"Noto Sans SC",-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;
+      }
+      *{box-sizing:border-box;}
+      html{scroll-behavior:smooth;}
+      body{
+        margin:0;background:var(--bg);color:var(--ink);
+        font-family:var(--sans);font-size:16px;line-height:1.75;
+        -webkit-font-smoothing:antialiased;
+      }
+      /* faint blueprint grid backdrop */
+      body::before{
+        content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+        background:
+          linear-gradient(rgba(47,214,242,.045) 1px,transparent 1px),
+          linear-gradient(90deg,rgba(47,214,242,.045) 1px,transparent 1px);
+        background-size:44px 44px;
+        mask-image:linear-gradient(to bottom,black 0,transparent 340px);
+        -webkit-mask-image:linear-gradient(to bottom,black 0,transparent 340px);
+      }
+      .wrap{max-width:720px;margin:0 auto;padding:0 20px 64px;}
+
+      /* ---------- header ---------- */
+      .series-badge{
+        display:inline-flex;align-items:center;gap:8px;
+        margin-top:26px;padding:5px 12px;
+        border:1px solid var(--cyan-dim);border-radius:999px;
+        font-family:var(--mono);font-size:12.5px;letter-spacing:.14em;
+        color:var(--cyan);background:rgba(47,214,242,.06);
+      }
+      .series-badge::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--cyan);box-shadow:0 0 8px var(--cyan);}
+      h1{
+        margin:20px 0 12px;font-size:31px;line-height:1.35;font-weight:900;letter-spacing:.01em;
+      }
+      h1 .hl{color:var(--cyan);}
+      .lede{margin:0;color:var(--muted);font-size:16.5px;line-height:1.8;}
+      .lede strong{color:var(--ink);}
+
+      /* ---------- sections ---------- */
+      section{margin-top:52px;}
+      .sec-head{display:flex;align-items:baseline;gap:12px;margin-bottom:16px;}
+      .sec-no{
+        font-family:var(--mono);font-size:13px;font-weight:700;color:var(--cyan);
+        border:1px solid var(--cyan-dim);border-radius:6px;padding:1px 8px;flex:none;
+        background:rgba(47,214,242,.05);
+      }
+      h2{margin:0;font-size:21px;font-weight:900;line-height:1.45;}
+      p{margin:0 0 12px;}
+      .body-txt{color:var(--muted);}
+      .body-txt strong,.body-txt b{color:var(--ink);font-weight:700;}
+      .accent{color:var(--cyan);font-weight:700;}
+
+      /* ---------- news hook card ---------- */
+      .news{
+        margin-top:30px;border:1px solid var(--line);border-left:3px solid var(--red);
+        background:linear-gradient(180deg,var(--panel),var(--panel2));
+        border-radius:10px;padding:20px 20px 8px;
+      }
+      .news-tag{
+        display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;
+        font-family:var(--mono);font-size:12px;letter-spacing:.12em;color:var(--faint);
+        text-transform:uppercase;margin-bottom:12px;
+      }
+      .news-tag .live{color:var(--red);display:inline-flex;align-items:center;gap:6px;}
+      .news-tag .live::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--red);animation:blink 1.6s infinite;}
+      @keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+      .news h3{margin:0 0 10px;font-size:20px;line-height:1.5;font-weight:900;}
+      .news h3 .num{font-family:var(--mono);color:var(--red);font-size:26px;}
+      .news p{color:var(--muted);}
+      .news p strong{color:var(--ink);}
+      .news .punch{
+        border-top:1px dashed var(--line);margin-top:16px;padding:14px 0 10px;color:var(--muted);
+      }
+      .news .punch .big{color:var(--ink);font-size:18px;font-weight:900;}
+      .news .punch .big em{font-style:normal;color:var(--cyan);}
+
+      /* ---------- main diagram ---------- */
+      .diagram-card{
+        border:1px solid var(--line);border-radius:12px;background:var(--bg2);
+        padding:18px 14px 14px;overflow:hidden;
+      }
+      .diagram-card svg{width:100%;height:auto;display:block;}
+      .step-caption{
+        min-height:52px;margin-top:10px;padding:10px 14px;border-radius:8px;
+        background:var(--panel);border:1px solid var(--line-soft);
+        display:flex;align-items:center;gap:12px;
+      }
+      .step-caption .tag{
+        flex:none;font-family:var(--mono);font-size:11.5px;font-weight:700;letter-spacing:.08em;
+        padding:2px 8px;border-radius:5px;border:1px solid var(--line);color:var(--muted);
+      }
+      .step-caption p{margin:0;font-size:14.5px;line-height:1.6;color:var(--muted);}
+      .step-caption p strong{color:var(--ink);}
+      .step-dots{display:flex;gap:8px;justify-content:center;margin-top:12px;align-items:center;}
+      .step-dots button{
+        width:34px;height:26px;border-radius:6px;border:1px solid var(--line);
+        background:var(--panel);color:var(--faint);font-family:var(--mono);font-size:12px;
+        cursor:pointer;padding:0;
+      }
+      .step-dots button[aria-current="true"]{border-color:var(--cyan);color:var(--cyan);background:rgba(47,214,242,.08);}
+      .step-dots .replay{
+        width:auto;padding:0 12px;margin-left:6px;color:var(--muted);font-family:var(--sans);font-size:12.5px;
+      }
+      .figcap{
+        margin:14px 4px 0;text-align:center;color:var(--faint);font-size:14px;
+      }
+      .figcap strong{color:var(--cyan);font-weight:700;}
+
+      /* SVG state styling (driven by data-step on wrapper) */
+      .node-box{fill:#131e29;stroke:#33475c;stroke-width:1.5;}
+      .node-label{fill:#e9eff5;font-family:var(--sans);font-weight:700;}
+      .node-sub{fill:#9db0c1;font-family:var(--sans);}
+      .flow{stroke:#2fd6f2;stroke-width:2.5;fill:none;stroke-dasharray:7 6;animation:flowmove 1.1s linear infinite;}
+      @keyframes flowmove{to{stroke-dashoffset:-13;}}
+      .flow-static{stroke:#33475c;stroke-width:2.5;fill:none;}
+      .sig-line{stroke:#3ddc97;stroke-width:2.5;fill:none;stroke-dasharray:7 6;animation:flowmove 1.1s linear infinite;}
+      .backup-line{stroke:#2a3a4a;stroke-width:2.5;fill:none;stroke-dasharray:5 6;}
+      .status-dot{fill:#3ddc97;}
+      .fault-badge,.alert-badge{opacity:0;transition:opacity .35s;}
+      .ring-pulse{opacity:0;}
+      [data-step="1"] .sensor-box{stroke:var(--red);fill:#2a1518;}
+      [data-step="1"] .sig-line{stroke:var(--red);animation:none;stroke-dasharray:3 7;opacity:.55;}
+      [data-step="1"] .fault-badge{opacity:1;}
+      [data-step="1"] .sensor-dot{fill:var(--red);}
+      [data-step="2"] .sensor-box{stroke:var(--red);fill:#2a1518;}
+      [data-step="2"] .sig-line{stroke:var(--red);animation:none;stroke-dasharray:3 7;opacity:.55;}
+      [data-step="2"] .fault-badge{opacity:1;}
+      [data-step="2"] .sensor-dot{fill:var(--red);}
+      [data-step="2"] .ecu-box{stroke:var(--amber);}
+      [data-step="2"] .ring-pulse{opacity:1;animation:pulse 1.2s ease-out infinite;}
+      @keyframes pulse{0%{r:30;opacity:.7}100%{r:46;opacity:0}}
+      [data-step="3"] .sensor-box{stroke:#5a3a3a;fill:#1d1416;}
+      [data-step="3"] .sig-line{stroke:#5a3a3a;animation:none;opacity:.4;}
+      [data-step="3"] .sensor-dot{fill:#7a4a4a;}
+      [data-step="3"] .backup-line{stroke:var(--cyan);animation:flowmove 1.1s linear infinite;}
+      [data-step="3"] .backup-label{fill:var(--cyan);}
+      [data-step="4"] .sensor-box{stroke:#5a3a3a;fill:#1d1416;}
+      [data-step="4"] .sig-line{stroke:#5a3a3a;animation:none;opacity:.4;}
+      [data-step="4"] .sensor-dot{fill:#7a4a4a;}
+      [data-step="4"] .backup-line{stroke:var(--cyan);animation:flowmove 1.1s linear infinite;}
+      [data-step="4"] .backup-label{fill:var(--cyan);}
+      [data-step="4"] .driver-box{stroke:var(--green);fill:#12241c;}
+      [data-step="4"] .alert-badge{opacity:1;}
+      [data-step="4"] .safe-banner{opacity:1;}
+      .safe-banner{opacity:0;transition:opacity .4s;}
+      .backup-label{fill:#5f7488;font-family:var(--sans);}
+
+      /* ---------- foundation note ---------- */
+      .foundation{
+        margin-top:18px;border:1px solid var(--line-soft);border-radius:10px;
+        background:var(--panel2);padding:14px 18px;color:var(--muted);font-size:14.5px;line-height:1.75;
+        display:flex;gap:12px;align-items:flex-start;
+      }
+      .foundation svg{flex:none;margin-top:3px;}
+      .foundation strong{color:var(--ink);}
+
+      /* ---------- two failure kinds ---------- */
+      .duo{display:grid;grid-template-columns:1fr;gap:14px;}
+      @media(min-width:560px){.duo{grid-template-columns:1fr 1fr;}}
+      .kind{
+        border:1px solid var(--line);border-radius:12px;background:var(--panel);
+        padding:18px;
+      }
+      .kind .k-head{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+      .kind .k-ico{
+        width:38px;height:38px;flex:none;border-radius:9px;display:grid;place-items:center;
+        border:1px solid var(--line);background:var(--bg2);
+      }
+      .kind h3{margin:0;font-size:17px;font-weight:900;}
+      .kind .k-en{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;color:var(--faint);display:block;margin-top:1px;}
+      .kind p{color:var(--muted);font-size:14.5px;margin-bottom:10px;}
+      .kind p strong{color:var(--ink);}
+      .kind .fix{
+        border-top:1px dashed var(--line);padding-top:10px;font-size:14.5px;color:var(--muted);
+      }
+      .kind .fix b{color:var(--cyan);font-weight:700;}
+
+      /* ---------- standard card ---------- */
+      .std-card{
+        margin-top:22px;border:1px solid var(--cyan-dim);border-radius:12px;
+        background:linear-gradient(180deg,rgba(47,214,242,.07),rgba(47,214,242,.02));
+        padding:18px 20px 14px;position:relative;
+      }
+      .std-card .std-tag{
+        font-family:var(--mono);font-size:11px;letter-spacing:.16em;color:var(--cyan);
+        text-transform:uppercase;display:block;margin-bottom:8px;
+      }
+      .std-card .std-name{font-family:var(--mono);font-weight:700;font-size:17px;line-height:1.6;color:var(--ink);}
+      .std-card .std-name .cn{font-family:var(--sans);font-weight:700;}
+      .std-card p{color:var(--muted);font-size:14.5px;margin:8px 0 6px;}
+      .std-card p strong{color:var(--ink);}
+      .std-card .aside{
+        border-top:1px dashed rgba(47,214,242,.25);margin-top:10px;padding-top:10px;
+        font-size:13.5px;color:var(--faint);
+      }
+      .std-card .aside b{color:var(--muted);}
+
+      /* ---------- ASIL ---------- */
+      .versus{
+        display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:stretch;margin-bottom:16px;
+      }
+      .versus .v{
+        border:1px solid var(--line);border-radius:10px;background:var(--panel);
+        padding:12px 14px;text-align:center;
+      }
+      .versus .v .v-name{font-weight:900;font-size:15.5px;display:block;}
+      .versus .v .v-sub{color:var(--faint);font-size:12.5px;display:block;margin-top:2px;}
+      .versus .v.bad{border-color:var(--red-deep);}
+      .versus .vs{
+        align-self:center;font-family:var(--mono);color:var(--faint);font-size:13px;font-weight:700;
+      }
+      .dims{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 18px;}
+      .dim{
+        flex:1 1 30%;min-width:100px;border:1px solid var(--line-soft);border-radius:9px;
+        background:var(--panel2);padding:9px 12px;text-align:center;
+      }
+      .dim .d-q{display:block;font-weight:700;font-size:14.5px;}
+      .dim .d-t{display:block;color:var(--faint);font-size:12px;margin-top:1px;}
+      .asil-scale{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
+      .asil{
+        border-radius:10px;padding:12px 6px 10px;text-align:center;border:1px solid var(--line);
+        background:var(--panel);
+      }
+      .asil .a-letter{font-family:var(--mono);font-size:26px;font-weight:700;display:block;line-height:1.1;}
+      .asil .a-lv{font-size:12px;color:var(--muted);display:block;margin-top:2px;}
+      .asil .a-bar{height:5px;border-radius:3px;margin:10px 8px 2px;background:var(--line);}
+      .asil .a-bar i{display:block;height:100%;border-radius:3px;width:0;transition:width 1s ease;}
+      .in-view .asil .a-bar i{width:var(--w);}
+      .asil.a .a-letter{color:#7fd8a4;} .asil.a .a-bar i{background:#7fd8a4;--w:25%;}
+      .asil.b .a-letter{color:#ffd166;} .asil.b .a-bar i{background:#ffd166;--w:50%;}
+      .asil.c .a-letter{color:#ff9f5a;} .asil.c .a-bar i{background:#ff9f5a;--w:75%;}
+      .asil.d .a-letter{color:var(--red);} .asil.d .a-bar i{background:var(--red);--w:100%;}
+      .asil.d{border-color:var(--red-deep);}
+      .plain-line{
+        margin-top:16px;border-radius:10px;background:var(--panel);border:1px solid var(--line-soft);
+        padding:12px 16px;color:var(--muted);font-size:15px;
+      }
+      .plain-line strong{color:var(--ink);}
+      .plain-line .q{color:var(--cyan);font-weight:900;}
+
+      /* ---------- three moves ---------- */
+      .moves{display:grid;grid-template-columns:1fr;gap:14px;}
+      @media(min-width:560px){.moves{grid-template-columns:repeat(3,1fr);}}
+      .move{
+        border:1px solid var(--line);border-radius:12px;background:var(--panel);padding:18px 16px;
+      }
+      .move .m-ico{height:64px;display:grid;place-items:center;margin-bottom:10px;}
+      .move h3{margin:0 0 6px;font-size:17px;font-weight:900;text-align:center;}
+      .move h3 .m-no{font-family:var(--mono);color:var(--cyan);font-size:13px;margin-right:6px;}
+      .move p{color:var(--muted);font-size:14px;margin:0;text-align:left;}
+      .move p strong{color:var(--ink);}
+      .move.safe{border-color:#2c5c46;background:linear-gradient(180deg,rgba(61,220,151,.06),var(--panel));}
+
+      /* ---------- cases ---------- */
+      .case{
+        border:1px solid var(--line);border-radius:12px;background:var(--panel);
+        padding:18px 20px 10px;margin-bottom:14px;
+      }
+      .case .c-top{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:6px;}
+      .case .c-letter{
+        font-family:var(--mono);font-weight:700;font-size:13px;color:var(--bg);
+        background:var(--cyan);border-radius:6px;padding:1px 9px;flex:none;
+      }
+      .case .c-date{font-family:var(--mono);font-size:12.5px;color:var(--faint);letter-spacing:.06em;}
+      .case .c-model{font-weight:900;font-size:16.5px;}
+      .case .c-num{
+        margin-left:auto;font-family:var(--mono);font-weight:700;font-size:24px;color:var(--amber);
+        white-space:nowrap;
+      }
+      .case .c-num small{font-size:12px;color:var(--muted);font-family:var(--sans);font-weight:400;margin-left:2px;}
+      .case p{color:var(--muted);font-size:14.5px;}
+      .case p strong{color:var(--ink);}
+      .case .c-tag{
+        display:inline-block;font-size:12px;padding:1px 9px;border-radius:999px;
+        border:1px solid var(--line);color:var(--muted);margin-bottom:12px;
+      }
+      .case .c-tag.sys{border-color:#6b4a8f;color:#c9a6f2;}
+      .case .c-tag.hw{border-color:var(--cyan-dim);color:var(--cyan);}
+      .bridge{
+        color:var(--muted);font-size:15px;border-left:3px solid var(--amber);
+        padding:4px 0 4px 14px;margin:20px 0 0;
+      }
+      .bridge strong{color:var(--ink);}
+
+      /* ---------- takeaway ---------- */
+      .takeaway{
+        margin-top:56px;text-align:center;border:1px solid var(--line);border-radius:14px;
+        background:radial-gradient(120% 160% at 50% 0%,rgba(47,214,242,.10),var(--panel) 60%);
+        padding:34px 24px 30px;
+      }
+      .takeaway .t-tag{font-family:var(--mono);font-size:11.5px;letter-spacing:.2em;color:var(--cyan);text-transform:uppercase;}
+      .takeaway p{
+        margin:14px auto 0;max-width:520px;font-size:21px;line-height:1.65;font-weight:900;
+      }
+      .takeaway p .hl{color:var(--cyan);}
+
+      /* ---------- next episode ---------- */
+      .next{
+        margin-top:22px;border:1px dashed var(--line);border-radius:12px;padding:20px;
+        background:var(--panel2);display:flex;gap:16px;align-items:flex-start;
+      }
+      .next .n-arrow{
+        flex:none;width:42px;height:42px;border-radius:50%;border:1px solid var(--cyan-dim);
+        display:grid;place-items:center;color:var(--cyan);font-size:19px;font-family:var(--mono);
+      }
+      .next h3{margin:0 0 6px;font-size:17px;font-weight:900;}
+      .next h3 .n-tag{color:var(--cyan);font-family:var(--mono);font-size:12px;letter-spacing:.1em;display:block;margin-bottom:4px;}
+      .next p{color:var(--muted);font-size:14.5px;margin:0;}
+      .next p strong{color:var(--ink);}
+
+      footer{
+        margin-top:52px;padding-top:20px;border-top:1px solid var(--line-soft);
+        display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;
+        font-family:var(--mono);font-size:12px;letter-spacing:.1em;color:var(--faint);
+      }
+
+      @media(max-width:420px){
+        h1{font-size:27px;}
+        .case .c-num{margin-left:0;}
+        .versus{gap:6px;}
+      }
+      @media(prefers-reduced-motion:reduce){
+        .flow,.sig-line,.backup-line{animation:none !important;}
+        .news-tag .live::before{animation:none;}
+        html{scroll-behavior:auto;}
+        .asil .a-bar i{transition:none;width:var(--w);}
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+
+      <!-- ===================== 页首 ===================== -->
+      <span class="series-badge">汽车安全科普 · 第2篇</span>
+      <h1>功能安全：车<span class="hl">“坏了”</span>之后，<br />谁来兜底？</h1>
+      <p class="lede">零件会磨损，软件会出错——车，迟早会“坏”。这一篇讲的，就是工程师如何<strong>提前把“坏了之后”的每一步都安排好</strong>。</p>
+
+      <!-- ===================== ① 场景钩子 ===================== -->
+      <div class="news" role="group" aria-label="新闻钩子">
+        <div class="news-tag">
+          <span class="live">召回快讯</span>
+          <span>2026 年 9 月</span>
+        </div>
+        <h3><span class="num">686</span> 辆刚上市的新车，被召回。</h3>
+        <p>原因藏在方向盘下面：转向管柱里的<strong>扭矩传感器线束和转子“打架”</strong>，互相干涉、磨损，转向助力的信号说断就断——开着开着，<strong>方向盘可能突然失去助力</strong>。</p>
+        <div class="punch">
+          <p style="margin:0;">车会坏，不稀奇。真正的问题是：<span class="big">坏的那一刻，怎样尽量不出事？</span><br />有一整套工程方法专门研究这件事，它叫——<span class="big"><em>功能安全</em></span>。</p>
+        </div>
+      </div>
+
+      <!-- ===================== ② 主图：驾驶链路动画 ===================== -->
+      <section aria-labelledby="h-diagram">
+        <div class="sec-head">
+          <span class="sec-no">图 1</span>
+          <h2 id="h-diagram">一次“坏掉”，系统怎么接招</h2>
+        </div>
+        <div class="diagram-card">
+          <div id="chain" data-step="0">
+            <svg viewBox="0 0 360 300" role="img" aria-label="驾驶链路示意图：驾驶员、电控单元、执行机构，传感器信号丢失后系统切换备用通道并进入安全状态">
+              <!-- sensor -->
+              <g>
+                <rect class="node-box sensor-box" x="140" y="8" width="80" height="40" rx="8" />
+                <circle class="status-dot sensor-dot" cx="156" cy="28" r="4" />
+                <text class="node-label" x="186" y="34" font-size="13" text-anchor="middle">传感器</text>
+              </g>
+              <!-- signal line sensor -> ECU -->
+              <path class="sig-line" d="M180 48 L180 74" />
+              <path d="M175 68 L180 76 L185 68" fill="#3ddc97" class="sig-arrow" />
+              <!-- fault badge on sensor -->
+              <g class="fault-badge">
+                <circle cx="222" cy="10" r="10" fill="#ff5d5d" />
+                <text x="222" y="15" font-size="13" font-weight="700" fill="#0a0e13" text-anchor="middle">!</text>
+              </g>
+
+              <!-- driver -->
+              <g>
+                <rect class="node-box driver-box" x="8" y="84" width="86" height="58" rx="10" />
+                <circle cx="51" cy="106" r="11" fill="none" stroke="#9db0c1" stroke-width="2" />
+                <circle cx="51" cy="106" r="3.5" fill="#9db0c1" />
+                <path d="M51 95 L51 103 M42 112 L49 108 M60 112 L53 108" stroke="#9db0c1" stroke-width="2" stroke-linecap="round" />
+                <text class="node-label" x="51" y="133" font-size="13" text-anchor="middle">驾驶员</text>
+              </g>
+              <!-- alert badge on driver -->
+              <g class="alert-badge">
+                <circle cx="96" cy="86" r="10" fill="#3ddc97" />
+                <path d="M91 88 a5 5 0 0 1 10 0 l1.5 3 h-13 z M94.5 93.5 a1.8 1.8 0 0 0 3 0" fill="#0a0e13" />
+              </g>
+
+              <!-- ECU -->
+              <circle class="ring-pulse" cx="180" cy="113" r="30" fill="none" stroke="#ffb454" stroke-width="2" />
+              <g>
+                <rect class="node-box ecu-box" x="132" y="84" width="96" height="58" rx="10" />
+                <rect x="164" y="97" width="32" height="24" rx="3" fill="none" stroke="#9db0c1" stroke-width="2" />
+                <path d="M170 97 v-6 M180 97 v-6 M190 97 v-6 M170 121 v6 M180 121 v6 M190 121 v6 M164 104 h-6 M164 113 h-6 M196 104 h6 M196 113 h6" stroke="#9db0c1" stroke-width="2" />
+                <text class="node-label" x="180" y="136" font-size="12.5" text-anchor="middle">电控单元</text>
+              </g>
+
+              <!-- actuator -->
+              <g>
+                <rect class="node-box" x="266" y="84" width="86" height="58" rx="10" />
+                <path d="M292 118 a17 17 0 1 1 34 0" fill="none" stroke="#9db0c1" stroke-width="2.5" />
+                <circle cx="309" cy="104" r="5" fill="none" stroke="#9db0c1" stroke-width="2.5" />
+                <path d="M309 104 L322 114" stroke="#9db0c1" stroke-width="2.5" stroke-linecap="round" />
+                <text class="node-label" x="309" y="136" font-size="13" text-anchor="middle">执行机构</text>
+              </g>
+
+              <!-- main flows -->
+              <path class="flow" d="M94 113 L132 113" />
+              <path class="flow" d="M228 113 L266 113" />
+
+              <!-- backup channel -->
+              <path class="backup-line" d="M180 142 L180 196 L309 196 L309 142" />
+              <text class="backup-label" x="244" y="188" font-size="11.5" text-anchor="middle">备用通道</text>
+
+              <!-- safe state banner -->
+              <g class="safe-banner">
+                <rect x="56" y="228" width="248" height="46" rx="10" fill="#12241c" stroke="#3ddc97" />
+                <path d="M80 244 l5 5 l9 -10" stroke="#3ddc97" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" transform="translate(0,3)" />
+                <text x="192" y="250" font-size="13" font-weight="700" fill="#e9eff5" text-anchor="middle">安全状态：报警 + 交还控制</text>
+                <text x="192" y="267" font-size="11" fill="#9db0c1" text-anchor="middle">方向盘回到驾驶员手里</text>
+              </g>
+            </svg>
+          </div>
+
+          <div class="step-caption" aria-live="polite">
+            <span class="tag" id="stepTag">正常</span>
+            <p id="stepText"><strong>一切正常。</strong>传感器把信号源源不断送进电控单元，车听你的。</p>
+          </div>
+          <div class="step-dots" role="group" aria-label="动画步骤">
+            <button type="button" data-goto="0" aria-current="true">1</button>
+            <button type="button" data-goto="1" aria-current="false">2</button>
+            <button type="button" data-goto="2" aria-current="false">3</button>
+            <button type="button" data-goto="3" aria-current="false">4</button>
+            <button type="button" data-goto="4" aria-current="false">5</button>
+            <button type="button" class="replay" id="replayBtn">↻ 重播</button>
+          </div>
+        </div>
+        <p class="figcap">功能安全管的，就是<strong>“它坏掉的那一刻”</strong>。</p>
+
+        <div class="foundation">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 20h18M5 20v-6h14v6M7 14V9h10v5M9 9V5h6v4" stroke="#2fd6f2" stroke-width="1.8" stroke-linejoin="round"/></svg>
+          <div>先说清一层：功能安全只管<strong>电子、电气和软件</strong>。它下面还有更根本的一层——<strong>机械可靠</strong>：强度够、疲劳寿命够。功能安全，是建在这一层之上的。</div>
+        </div>
+      </section>
+
+      <!-- ===================== ③ 两种“坏” ===================== -->
+      <section aria-labelledby="h-kinds">
+        <div class="sec-head">
+          <span class="sec-no">01</span>
+          <h2 id="h-kinds">两种“坏”，一本标准管</h2>
+        </div>
+        <p class="body-txt">零件会磨损，代码也会出错。在功能安全里，<strong>软件故障、电气故障同样算“坏了”</strong>——只是这种坏，肉眼看不见。归起来，一共两种：</p>
+        <div class="duo">
+          <article class="kind">
+            <div class="k-head">
+              <span class="k-ico">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.6 10.8c.7.6 1.1 1.3 1.1 2.2h5c0-.9.4-1.6 1.1-2.2A6 6 0 0 0 12 3z" stroke="#ffb454" stroke-width="1.8" stroke-linejoin="round"/></svg>
+              </span>
+              <h3>随机硬件失效<span class="k-en">RANDOM HARDWARE FAILURE</span></h3>
+            </div>
+            <p>电子元器件像<strong>灯泡</strong>，有寿命。用到一定次数、遇上极端温度，就可能<strong>“说坏就坏”</strong>——哪一颗先坏，事先算不准。</p>
+            <div class="fix"><b>办法：</b>测算失效率，把它压到可接受的数字。</div>
+          </article>
+          <article class="kind">
+            <div class="k-head">
+              <span class="k-ico">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M8 6l-5 6 5 6M16 6l5 6-5 6" stroke="#c9a6f2" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+              <h3>系统性失效<span class="k-en">SYSTEMATIC FAILURE</span></h3>
+            </div>
+            <p>设计或代码里的 <strong>bug</strong>，像<strong>菜谱写错了</strong>：不改菜谱，每次照着做都咸。软件 bug 就属于这一类。</p>
+            <div class="fix"><b>办法：</b>靠开发流程、评审和测试，把错误拦在量产之前。</div>
+          </article>
+        </div>
+
+        <!-- 标准名片 -->
+        <div class="std-card">
+          <span class="std-tag">标准名片 · 本篇依据</span>
+          <div class="std-name">ISO 26262:2018（第二版）<br />GB/T 34590-2022 <span class="cn">《道路车辆 功能安全》</span></div>
+          <p>一句话人话：<strong>专为电子电气和软件而来、管“坏了怎么办”的那本标准。</strong></p>
+          <p class="aside"><b>顺带一句：</b>黑客攻击另有标准管——ISO/SAE 21434、GB 44495-2024，那是信息安全，不归本篇管。</p>
+        </div>
+      </section>
+
+      <!-- ===================== ④ ASIL ===================== -->
+      <section aria-labelledby="h-asil">
+        <div class="sec-head">
+          <span class="sec-no">02</span>
+          <h2 id="h-asil">ASIL：给“坏”评个级</h2>
+        </div>
+        <p class="body-txt">同样是“坏”，分量完全不同：</p>
+        <div class="versus">
+          <div class="v bad">
+            <span class="v-name">高速上转向 / 制动失灵</span>
+            <span class="v-sub">可能车毁人亡</span>
+          </div>
+          <span class="vs">VS</span>
+          <div class="v">
+            <span class="v-name">座椅加热失灵</span>
+            <span class="v-sub">顶多屁股凉一点</span>
+          </div>
+        </div>
+        <p class="body-txt">标准按三个维度打分，定出等级：</p>
+        <div class="dims">
+          <div class="dim"><span class="d-q">坏得有多惨</span><span class="d-t">严重度</span></div>
+          <div class="dim"><span class="d-q">发生的概率</span><span class="d-t">发生可能性</span></div>
+          <div class="dim"><span class="d-q">多好躲</span><span class="d-t">可控性</span></div>
+        </div>
+        <div class="asil-scale" id="asilScale">
+          <div class="asil a"><span class="a-letter">A</span><span class="a-lv">最低</span><span class="a-bar"><i></i></span></div>
+          <div class="asil b"><span class="a-letter">B</span><span class="a-lv">较低</span><span class="a-bar"><i></i></span></div>
+          <div class="asil c"><span class="a-letter">C</span><span class="a-lv">较高</span><span class="a-bar"><i></i></span></div>
+          <div class="asil d"><span class="a-letter">D</span><span class="a-lv">最高</span><span class="a-bar"><i></i></span></div>
+        </div>
+        <div class="plain-line"><span class="q">人话：</span>ASIL 就是<strong>“这条功能有多要命”</strong>的风险分级——等级越高，防错的投入越狠。</div>
+      </section>
+
+      <!-- ===================== ⑤ 三招兜底 ===================== -->
+      <section aria-labelledby="h-moves">
+        <div class="sec-head">
+          <span class="sec-no">03</span>
+          <h2 id="h-moves">坏了之后，三招兜底</h2>
+        </div>
+        <div class="moves">
+          <article class="move">
+            <div class="m-ico">
+              <svg width="104" height="56" viewBox="0 0 104 56" fill="none" aria-hidden="true">
+                <path d="M6 14 H66 a10 10 0 0 1 10 10 v4" stroke="#2fd6f2" stroke-width="2.5"/>
+                <path d="M6 42 H86 a8 8 0 0 0 8-8" stroke="#3ddc97" stroke-width="2.5" stroke-dasharray="6 5"/>
+                <circle cx="6" cy="14" r="3.5" fill="#2fd6f2"/><circle cx="6" cy="42" r="3.5" fill="#3ddc97"/>
+                <path d="M90 24 l6 4 l-6 4z" fill="#2fd6f2"/>
+              </svg>
+            </div>
+            <h3><span class="m-no">招 1</span>冗余</h3>
+            <p>关键路径<strong>多备一条</strong>：这条走不通，立刻换道。比如双制动回路、双路供电。</p>
+          </article>
+          <article class="move">
+            <div class="m-ico">
+              <svg width="104" height="56" viewBox="0 0 104 56" fill="none" aria-hidden="true">
+                <path d="M14 28 C28 10 42 10 52 26 C62 10 76 10 90 28 C76 46 62 46 52 30 C42 46 28 46 14 28 Z" stroke="#ffb454" stroke-width="2.5" stroke-linejoin="round"/>
+                <circle cx="52" cy="28" r="7" stroke="#ffb454" stroke-width="2.5"/>
+                <circle cx="52" cy="28" r="2.5" fill="#ffb454"/>
+              </svg>
+            </div>
+            <h3><span class="m-no">招 2</span>监控</h3>
+            <p>系统<strong>时刻自检</strong>，像电梯的超载报警——一有异常，立刻就知道，不等出事才发现。</p>
+          </article>
+          <article class="move safe">
+            <div class="m-ico">
+              <svg width="104" height="56" viewBox="0 0 104 56" fill="none" aria-hidden="true">
+                <path d="M52 6 l26 8 v14 c0 13 -11 19 -26 22 C37 47 26 41 26 28 V14 z" stroke="#3ddc97" stroke-width="2.5" stroke-linejoin="round"/>
+                <path d="M41 28 l8 8 l15 -16" stroke="#3ddc97" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <h3><span class="m-no">招 3</span>安全状态</h3>
+            <p>进入预先定义好的<strong>“安全姿势”</strong>。有人驾驶时，<strong>报警 + 把控制稳稳交还给驾驶员</strong>，就是安全状态；实在交不回去，才降级、减速、靠边停——<strong>停下只是最后的选择</strong>。</p>
+          </article>
+        </div>
+      </section>
+
+      <!-- ===================== ⑥ 市面上的问题 ===================== -->
+      <section aria-labelledby="h-cases">
+        <div class="sec-head">
+          <span class="sec-no">04</span>
+          <h2 id="h-cases">市面上的问题：这两年真实发生的</h2>
+        </div>
+
+        <article class="case">
+          <div class="c-top">
+            <span class="c-letter">A</span>
+            <span class="c-date">2026 年 9 月</span>
+            <span class="c-model">蔚来“萤火虫”</span>
+            <span class="c-num">686<small>辆</small></span>
+          </div>
+          <span class="c-tag hw">硬件故障</span>
+          <p>就是开头那条新闻：转向管柱<strong>扭矩传感器的线束与转子干涉</strong>，信号异常，转向助力可能失效。硬件的“坏”，往往来得突然。</p>
+        </article>
+
+        <article class="case">
+          <div class="c-top">
+            <span class="c-letter">B</span>
+            <span class="c-date">2026 年 2 月</span>
+            <span class="c-model">蔚来 ES8 / ES6 / EC6</span>
+            <span class="c-num">24万+<small>辆</small></span>
+          </div>
+          <span class="c-tag sys">系统性失效 · 软件</span>
+          <p>因<strong>软件缺陷</strong>召回超过 24 万辆。看不见、摸不着，但它证明了一件事：<strong>软件出故障，同样是车“坏了”</strong>。</p>
+        </article>
+
+        <article class="case">
+          <div class="c-top">
+            <span class="c-letter">C</span>
+            <span class="c-date">2026 年 5 月 · 美国</span>
+            <span class="c-model">现代 Tucson / Santa Cruz</span>
+            <span class="c-num">42.1万<small>辆</small></span>
+          </div>
+          <span class="c-tag sys">系统性失效 · 软件</span>
+          <p>前视摄像头软件<strong>过于敏感</strong>，没有预警就全力急刹，人称<strong>“幽灵刹车”</strong>。这是软件 bug，按功能安全的口径修复：经销商免费刷软件。</p>
+        </article>
+
+        <p class="bridge">不过 C 案还有另一面：零件其实<strong>没坏，是“看错了”</strong>。这一面功能安全管不全——<strong>下一篇细讲</strong>。</p>
+      </section>
+
+      <!-- ===================== ⑦ 一句话带走 ===================== -->
+      <div class="takeaway">
+        <span class="t-tag">一句话带走</span>
+        <p>功能安全 = <span class="hl">假设车会坏</span>，<br />然后把“坏了之后”的每一步，<br />都提前安排好。</p>
+      </div>
+
+      <!-- ===================== ⑧ 下篇预告 ===================== -->
+      <div class="next">
+        <span class="n-arrow">→</span>
+        <div>
+          <h3><span class="n-tag">下篇预告 · 第 3 篇</span>预期功能安全：没坏，也出事？</h3>
+          <p>功能安全管不了<strong>“零件没坏也出事”</strong>：比如车在暴雨里看错路、把广告牌当成真车一脚急刹。那是另一门学问，叫<strong>预期功能安全</strong>。下一篇讲它。</p>
+        </div>
+      </div>
+
+      <footer>
+        <span>汽车安全科普 · 共 8 篇 · 第 2 篇</span>
+        <span>功能安全 · ISO 26262</span>
+      </footer>
+    </div>
+
+    <script>
+      (function () {
+        var steps = [
+          { tag: "正常", html: "<strong>一切正常。</strong>传感器把信号源源不断送进电控单元，车听你的。" },
+          { tag: "失效", html: "<strong>传感器信号丢失。</strong>线束被磨坏的那一刻，信号说断就断——车，坏了。" },
+          { tag: "检测", html: "<strong>系统检测到异常。</strong>电控单元时刻自检，信号一断，立刻发现。" },
+          { tag: "切换", html: "<strong>切换备用通道。</strong>主通道走不通，备用通道顶上，功能先保住。" },
+          { tag: "安全状态", html: "<strong>进入安全状态。</strong>报警响起，把控制稳稳交还给驾驶员——这就是标准认可的安全状态。" }
+        ];
+        var chain = document.getElementById("chain");
+        var tag = document.getElementById("stepTag");
+        var text = document.getElementById("stepText");
+        var dots = Array.prototype.slice.call(document.querySelectorAll(".step-dots button[data-goto]"));
+        var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        var current = 0, timer = null, DELAY = 2100;
+
+        function show(i) {
+          current = i;
+          chain.setAttribute("data-step", String(i));
+          tag.textContent = steps[i].tag;
+          text.innerHTML = steps[i].html;
+          dots.forEach(function (b, j) {
+            b.setAttribute("aria-current", j === i ? "true" : "false");
+          });
+        }
+        function next() { show((current + 1) % steps.length); }
+        function play() {
+          stop();
+          if (reduced) return;
+          timer = setInterval(next, DELAY);
+        }
+        function stop() { if (timer) { clearInterval(timer); timer = null; } }
+
+        dots.forEach(function (b) {
+          b.addEventListener("click", function () {
+            show(parseInt(b.getAttribute("data-goto"), 10));
+            play();
+          });
+        });
+        document.getElementById("replayBtn").addEventListener("click", function () {
+          show(0); play();
+        });
+        document.addEventListener("visibilitychange", function () {
+          if (document.hidden) stop(); else play();
+        });
+        show(0);
+        play();
+
+        /* ASIL bars animate when scrolled into view */
+        var scale = document.getElementById("asilScale");
+        if ("IntersectionObserver" in window && scale) {
+          var io = new IntersectionObserver(function (entries) {
+            entries.forEach(function (e) {
+              if (e.isIntersecting) { scale.classList.add("in-view"); io.disconnect(); }
+            });
+          }, { threshold: 0.4 });
+          io.observe(scale);
+        } else if (scale) {
+          scale.classList.add("in-view");
+        }
+      })();
+    </script>
+  </body>
+</html>

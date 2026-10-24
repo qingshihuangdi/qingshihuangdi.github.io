@@ -1,0 +1,403 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="data:,">
+<title>汽车安全科普 · 第1篇 总览（修订版）— 从机械到AI，车“坏”的方式变了四次</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&family=Noto+Serif+SC:wght@700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F6F5F2; --surface:#FFFFFF; --surface2:#EEF1F4; --ink:#17202E; --muted:#5D6B7D; --line:#E0E4E9;
+  --mech:#5B6B7F; --mech-bg:#EDF0F4;
+  --fusa:#1E4ED8; --fusa-bg:#EFF3FF; --sotif:#07856B; --sotif-bg:#E6F4F0; --ai:#C46A00; --ai-bg:#FFF3E2;
+  --red:#D92D20; --radius:18px;
+}
+@media (prefers-color-scheme: dark){
+  :root{ --bg:#12161E; --surface:#1C232F; --surface2:#242E3D; --ink:#EAF0F7; --muted:#9AA7B8; --line:#2E3A4A; --mech:#A8B6C6; --mech-bg:#26303D; --fusa-bg:#1A2A52; --sotif-bg:#14362F; --ai-bg:#3A2A12; }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Sans SC",system-ui,-apple-system,sans-serif;line-height:1.6}
+.wrap{max-width:980px;margin:0 auto;padding:0 18px 48px}
+.top-meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:20px}
+.pill{font-size:12px;font-weight:700;letter-spacing:.04em;padding:6px 10px;border-radius:999px;border:1px solid var(--line);background:var(--surface)}
+.pill.dark{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+h1{font-family:"Noto Serif SC",serif;font-size:40px;line-height:1.12;letter-spacing:-.01em;margin:18px 0 12px;font-weight:900}
+@media(max-width:600px){h1{font-size:31px}}
+.lead{font-size:17px;line-height:1.65;color:var(--muted);max-width:700px;margin:0}
+.lead b{color:var(--ink)}
+
+.hero-card{margin-top:22px;background:var(--ink);color:#fff;border-radius:22px;overflow:hidden;display:grid;grid-template-columns:1.1fr .9fr}
+@media(max-width:720px){.hero-card{grid-template-columns:1fr}}
+.hero-left{padding:22px}
+.hero-left h2{margin:0;font-size:21px;line-height:1.3}
+.hero-left p{opacity:.85;font-size:14px;line-height:1.65}
+.hero-left p b{color:#fff;opacity:1}
+.hero-visual{background:#0F172A;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:18px;position:relative;overflow:hidden}
+.hero-visual svg{width:100%;max-width:360px;height:auto}
+.hero-visual figcaption{color:#94A3B8;font-size:11px;margin-top:6px}
+@keyframes scan{0%{transform:rotate(-18deg)}50%{transform:rotate(18deg)}100%{transform:rotate(-18deg)}}
+@keyframes dashmove{to{stroke-dashoffset:-20}}
+@keyframes pulse{0%,100%{opacity:.35}50%{opacity:1}}
+.radar{transform-origin:180px 92px;animation:scan 3.2s ease-in-out infinite}
+.dashline{stroke-dasharray:6 6;animation:dashmove 1s linear infinite}
+.pulse{animation:pulse 1.8s infinite}
+@media (prefers-reduced-motion: reduce){ .radar,.dashline,.pulse,.stage-dot{animation:none !important} }
+
+.section{margin-top:38px}
+.sec-head{display:flex;align-items:baseline;gap:12px;margin-bottom:12px}
+.sec-head h2{font-size:24px;margin:0;letter-spacing:-.01em;line-height:1.25}
+.sec-head span{font-size:12px;font-weight:800;letter-spacing:.08em;color:var(--muted)}
+.sec-desc{color:var(--muted);font-size:15px;margin:0 0 16px;max-width:660px}
+.sec-desc b{color:var(--ink)}
+
+/* 进化线 */
+.evo{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;position:relative}
+@media(max-width:760px){.evo{grid-template-columns:1fr 1fr}}
+@media(max-width:460px){.evo{grid-template-columns:1fr}}
+.stage{border-radius:16px;padding:16px;border:1px solid var(--line);background:var(--surface);position:relative}
+.stage .era{font-size:11px;font-weight:900;letter-spacing:.05em;color:var(--muted)}
+.stage h3{margin:6px 0 4px;font-size:17px;display:flex;align-items:center;gap:8px}
+.stage p{margin:0;font-size:13px;color:var(--muted);line-height:1.6}
+.stage p b{color:var(--ink)}
+.stage .fail{margin-top:10px;border-radius:10px;padding:8px 10px;font-size:12.5px;line-height:1.5;background:var(--surface2)}
+.stage .fail b{display:block;font-size:11px;letter-spacing:.04em;margin-bottom:2px}
+.stage.mech{border-top:5px solid var(--mech)} .stage.fusa{border-top:5px solid var(--fusa)}
+.stage.sotif{border-top:5px solid var(--sotif)} .stage.ai{border-top:5px solid var(--ai)}
+.stage.mech .fail{background:var(--mech-bg)} .stage.fusa .fail{background:var(--fusa-bg)}
+.stage.sotif .fail{background:var(--sotif-bg)} .stage.ai .fail{background:var(--ai-bg)}
+.stage-ico{width:30px;height:30px;flex-shrink:0}
+.evo-note{margin-top:12px;font-size:13.5px;color:var(--muted);background:var(--surface);border:1px dashed var(--line);border-radius:12px;padding:12px 14px}
+.evo-note b{color:var(--ink)}
+
+/* 地基剖面 */
+.stack-wrap{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:stretch}
+@media(max-width:700px){.stack-wrap{grid-template-columns:1fr}}
+.stack{display:flex;flex-direction:column-reverse;gap:6px}
+.tier{border-radius:12px;padding:12px 14px;color:#fff;position:relative}
+.tier small{display:block;font-size:11.5px;opacity:.88;line-height:1.5}
+.tier b{font-size:15px}
+.tier.t-mech{background:#54677C;flex:1.25}
+.tier.t-fusa{background:var(--fusa)} .tier.t-sotif{background:var(--sotif)} .tier.t-ai{background:var(--ai)}
+.tier .base-flag{position:absolute;right:10px;top:10px;font-size:10.5px;font-weight:900;background:rgba(255,255,255,.22);padding:3px 7px;border-radius:999px}
+.pedal-card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px;display:flex;flex-direction:column}
+.pedal-card h3{margin:0 0 6px;font-size:17px}
+.pedal-card p{margin:0 0 10px;font-size:14px;color:var(--muted);line-height:1.65}
+.pedal-card p b{color:var(--ink)}
+.pedal-svg{margin-top:auto;background:var(--surface2);border-radius:12px;padding:10px}
+@keyframes crackblink{0%,100%{opacity:.25}50%{opacity:1}}
+.crackline{animation:crackblink 1.6s infinite}
+
+/* 安全状态 callout */
+.safestate{margin-top:14px;background:var(--ink);color:#fff;border-radius:18px;padding:20px;display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:start}
+@media(max-width:560px){.safestate{grid-template-columns:1fr}}
+.safestate .big{font-family:"Noto Serif SC",serif;font-size:26px;font-weight:900;line-height:1.25;white-space:nowrap}
+@media(max-width:560px){.safestate .big{white-space:normal}}
+.safestate p{margin:0;font-size:14px;line-height:1.7;opacity:.92}
+.safestate p b{color:#FFD479;opacity:1}
+.ss-chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.ss-chips span{font-size:12px;font-weight:700;padding:5px 9px;border-radius:999px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18)}
+
+/* 剧场 */
+.theatre{background:var(--surface);border:1px solid var(--line);border-radius:20px;overflow:hidden}
+.theatre-tabs{display:flex;gap:6px;padding:10px;background:var(--surface2);flex-wrap:wrap}
+.tab{flex:1;min-width:104px;border:0;padding:11px 8px;border-radius:999px;font-weight:700;font-size:13.5px;cursor:pointer;background:transparent;color:var(--muted);font-family:inherit}
+.tab.active{background:var(--ink);color:var(--bg)}
+.theatre-body{display:grid;grid-template-columns:1.1fr .9fr}
+@media(max-width:680px){.theatre-body{grid-template-columns:1fr}}
+.scene{padding:18px;display:flex;align-items:center;justify-content:center;background:#EAF0F7}
+@media(prefers-color-scheme:dark){.scene{background:#1E293B}}
+.scene svg{width:100%;max-width:380px}
+.theatre-text{padding:20px}
+.theatre-text h3{margin:0 0 6px;font-size:19px}
+.theatre-text p{color:var(--muted);font-size:14px;margin:0 0 12px;line-height:1.65}
+.theatre-text p b{color:var(--ink)}
+.kv{display:flex;gap:8px;flex-wrap:wrap}
+.kv span{font-size:12px;font-weight:700;padding:6px 8px;border-radius:999px;background:var(--surface2)}
+
+/* 标准名片 */
+.cards{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+@media(max-width:760px){.cards{grid-template-columns:1fr}}
+.std{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:18px}
+.std header{display:flex;justify-content:space-between;align-items:start;gap:8px}
+.std .code{font-size:27px;font-weight:900;letter-spacing:-.02em;line-height:1}
+.std .year{font-size:11.5px;color:var(--muted);font-weight:700;text-align:right;line-height:1.5}
+.std h3{margin:10px 0 4px;font-size:16.5px} .std p{font-size:13.5px;color:var(--muted);margin:0;line-height:1.6}
+.gb{margin-top:12px;border-top:1px dashed var(--line);padding-top:10px;font-size:12.5px;line-height:1.6}
+.gb b{font-size:12px;letter-spacing:.03em}
+.gb .pending{color:var(--ai);font-weight:800}
+.std ul{margin:10px 0 0;padding:0;list-style:none;font-size:13px}
+.std li{padding:7px 0;border-top:1px dashed var(--line);display:flex;gap:8px}
+.std li::before{content:"✓";font-weight:900}
+.cyber{margin-top:12px;background:var(--surface);border:1px dashed var(--line);border-radius:14px;padding:13px 16px;font-size:13.5px;color:var(--muted);line-height:1.65}
+.cyber b{color:var(--ink)}
+
+/* 对号入座 */
+.match{display:grid;gap:10px}
+.match-row{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center}
+@media(max-width:560px){.match-row{grid-template-columns:1fr}}
+.match-row h4{margin:0;font-size:15px} .match-row p{margin:2px 0 0;font-size:13px;color:var(--muted)}
+.badge{font-size:12px;font-weight:800;padding:7px 10px;border-radius:999px;white-space:nowrap}
+.badge.me{background:var(--mech-bg);color:var(--mech)} .badge.f{background:var(--fusa-bg);color:var(--fusa)}
+.badge.s{background:var(--sotif-bg);color:var(--sotif)} .badge.a{background:var(--ai-bg);color:var(--ai)}
+
+/* 小测 */
+.quiz{background:var(--ink);color:#fff;border-radius:20px;padding:20px}
+.quiz h3{margin:0 0 4px} .quiz p{opacity:.8;font-size:14px;margin:0 0 8px}
+.quiz-q{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:14px;margin-top:10px}
+.quiz-q b{font-size:14px;line-height:1.55;display:block}
+.opts{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.opt{border:1px solid rgba(255,255,255,.25);background:transparent;color:#fff;padding:7px 10px;border-radius:999px;font-size:13px;cursor:pointer;font-family:inherit}
+.opt.correct{background:#12B76A;border-color:#12B76A;color:#fff} .opt.wrong{background:#F04438;border-color:#F04438}
+.ans{font-size:13px;margin-top:8px;display:none;opacity:.92;line-height:1.6}
+
+/* 清单 */
+.checklist{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:8px 18px}
+.check-item{display:flex;gap:12px;padding:14px 0;border-bottom:1px solid var(--line)}
+.check-item:last-child{border:0}
+.check-num{width:28px;height:28px;border-radius:50%;background:var(--ink);color:var(--bg);display:grid;place-items:center;font-size:13px;font-weight:900;flex-shrink:0;margin-top:2px}
+.check-item h4{margin:0;font-size:15px} .check-item p{margin:1px 0 0;font-size:13px;color:var(--muted)}
+
+/* 合集计划 */
+.timeline{position:relative;margin-left:12px;padding-left:22px;border-left:2px solid var(--line)}
+.ep{display:flex;gap:14px;padding:11px 0;position:relative}
+.ep::before{content:"";position:absolute;left:-29px;top:17px;width:12px;height:12px;border-radius:50%;background:var(--surface);border:2px solid var(--muted)}
+.ep.now::before{background:var(--red);border-color:var(--red)}
+.ep .no{font-size:12px;font-weight:900;color:var(--muted);min-width:52px;padding-top:2px}
+.ep.now .no{color:var(--red)}
+.ep h4{margin:0;font-size:15px;overflow-wrap:anywhere} .ep p{margin:1px 0 0;font-size:13px;color:var(--muted)}
+.ep .today{font-size:11px;font-weight:800;background:#FEE4E2;color:#B42318;padding:3px 6px;border-radius:999px;margin-left:6px;vertical-align:2px}
+@media(prefers-color-scheme:dark){.ep .today{background:#4A2320;color:#F5B5B0}}
+
+.remember{background:#FFF7E6;border:1px solid #FDE68A;border-radius:16px;padding:18px;text-align:center}
+@media(prefers-color-scheme:dark){.remember{background:#2A2110;border-color:#5C4A1F}}
+.remember p{margin:0;font-size:18px;font-weight:800;line-height:1.55}
+.remember span{color:var(--muted);font-size:13px;font-weight:400}
+.footer{margin-top:28px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:12px;line-height:1.7;text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top-meta"><span class="pill dark">汽车安全科普 · 合集</span><span class="pill">第 1 篇 · 总览</span><span class="pill">修订版</span><span class="pill">约 5 分钟 · 多图版</span></div>
+  <h1>车“坏”的方式，<br>变了四次</h1>
+  <p class="lead">先纠正一个流行说法：<b>“车没坏却出了事”并不准确</b>。软件故障、电气故障，在汽车安全里同样算“坏了”——只不过不是机械件那种肉眼可见的坏。车从机械、电控、感知一路进化到 AI，<b>每进化一次，就多一种“坏法”，也多一本安全标准</b>。这一篇沿这条线讲清。</p>
+
+  <div class="hero-card">
+    <div class="hero-left">
+      <h2>四次进化，四种风险</h2>
+      <p>① <b>机械时代</b>：铁件断了、磨坏了，看得见。<br>② <b>电控时代</b>：芯片和软件也会“坏”，看不见。<br>③ <b>感知时代</b>：东西没坏，车却可能看错世界。<br>④ <b>AI 时代</b>：判断来自“学”，学偏了就会自信地犯错。</p>
+      <p>本篇主线：<b>功能安全 → 预期功能安全 → AI 安全</b>，而它们全都站在更底下的一层——机械可靠——之上。</p>
+    </div>
+    <figure class="hero-visual" style="margin:0">
+      <svg viewBox="0 0 360 220" fill="none" role="img" aria-label="示意图：车辆用雷达扫描感知周围环境"><rect x="10" y="10" width="340" height="200" rx="16" fill="#16213A"/><path class="dashline" d="M20 170 H340" stroke="#475569" stroke-width="2"/><path d="M20 50 H340" stroke="#334155" stroke-width="1"/><g class="radar"><path d="M180 92 L260 30 A95 95 0 0 1 275 95 Z" fill="#38BDF8" fill-opacity=".18"/><line x1="180" y1="92" x2="272" y2="88" stroke="#38BDF8" stroke-width="1.5"/></g><circle class="pulse" cx="180" cy="92" r="28" stroke="#38BDF8" stroke-width="1" fill="none"/><circle cx="180" cy="92" r="6" fill="#F8FAFC"/><rect x="138" y="118" width="84" height="44" rx="14" fill="#F1F5F9"/><rect x="152" y="108" width="56" height="28" rx="10" fill="#CBD5E1"/><circle cx="152" cy="166" r="10" fill="#0F172A"/><circle cx="208" cy="166" r="10" fill="#0F172A"/><circle cx="268" cy="62" r="7" fill="#FBBF24"/><rect x="52" y="132" width="28" height="14" rx="4" fill="#64748B"/></svg>
+      <figcaption>感知 · 决策 · 执行 — 每一环都可能出问题，也都要有兜底</figcaption>
+    </figure>
+  </div>
+
+  <!-- 01 进化线 -->
+  <section class="section">
+    <div class="sec-head"><span>01</span><h2>一条进化线，看懂全部安全门类</h2></div>
+    <p class="sec-desc">汽车安全的每个新门类，都是被汽车本身的新能力“逼”出来的。顺序记住了，标准就不会混。</p>
+    <div class="evo">
+      <article class="stage mech">
+        <span class="era">第一阶段 · 一百多年</span>
+        <h3><svg class="stage-ico" viewBox="0 0 32 32" fill="none" stroke="#5B6B7F" stroke-width="2.2"><circle cx="16" cy="16" r="5.5"/><path d="M16 3v5M16 24v5M3 16h5M24 16h5M6.8 6.8l3.5 3.5M21.7 21.7l3.5 3.5M25.2 6.8l-3.5 3.5M10.3 21.7l-3.5 3.5"/></svg>机械时代</h3>
+        <p>车是纯机械：发动机、变速箱、刹车，全靠物理零件。安全靠两件事——<b>撞的时候扛得住</b>（车身结构、安全带、气囊），<b>平时别坏</b>（材料与寿命）。</p>
+        <div class="fail"><b>出事方式</b>物理件破坏：要么强度不够，当场断；要么疲劳，攒够次数后断。</div>
+      </article>
+      <article class="stage fusa">
+        <span class="era">第二阶段 · 近三十年</span>
+        <h3><svg class="stage-ico" viewBox="0 0 32 32" fill="none" stroke="#1E4ED8" stroke-width="2.2"><rect x="9" y="9" width="14" height="14" rx="2"/><path d="M13 9V4M19 9V4M13 28v-5M19 28v-5M9 13H4M9 19H4M28 13h-5M28 19h-5"/></svg>电控时代</h3>
+        <p>刹车、转向、油门都交给电子电气系统和软件。好处是<b>主动安全</b>登场：ABS、ESP、自动刹车，像多了一双警惕的眼睛，事故前先拉你一把——<b>多留个心眼</b>。</p>
+        <div class="fail"><b>新出事方式</b>电子电气与软件自己会“坏”：元器件随机失效、设计与代码的系统性错误。看不见摸不着 → 功能安全专门管它。</div>
+      </article>
+      <article class="stage sotif">
+        <span class="era">第三阶段 · 智驾普及后</span>
+        <h3><svg class="stage-ico" viewBox="0 0 32 32" fill="none" stroke="#07856B" stroke-width="2.2"><path d="M2 16S7 7 16 7s14 9 14 9-5 9-14 9S2 16 2 16Z"/><circle cx="16" cy="16" r="4"/></svg>感知时代</h3>
+        <p>车装上摄像头、雷达，开始自己<b>看懂复杂环境</b>：识别车道、行人、障碍物，再自己做决定。感知，成了新的关键环节。</p>
+        <div class="fail"><b>新出事方式</b>零件一个没坏，但功能本身有边界：逆光、暴雨、异形目标让它看错、漏看 → 预期功能安全管这类“本事不够”。</div>
+      </article>
+      <article class="stage ai">
+        <span class="era">第四阶段 · 正在发生</span>
+        <h3><svg class="stage-ico" viewBox="0 0 32 32" fill="none" stroke="#C46A00" stroke-width="2.2"><circle cx="9" cy="9" r="3"/><circle cx="23" cy="8" r="3"/><circle cx="16" cy="17" r="3.4"/><circle cx="8" cy="25" r="3"/><circle cx="24" cy="24" r="3"/><path d="M11.5 11 14 14.5M20.5 10.5 18 14.5M14.5 19.5 10 22.5M17.5 19.5 22 21.8M11.8 9.2 20 8.6"/></svg>AI 时代</h3>
+        <p>决策不再全是工程师写死的规则，而是模型从<b>海量数据里学</b>出来的。车更聪明了，但它的毛病也开始像“人”的毛病：没见过的不会，学过的也可能学偏。</p>
+        <div class="fail"><b>新出事方式</b>风险来自数据、模型与训练本身：数据没覆盖、分布变了、置信度虚高 → AI 安全是最新的一门。</div>
+      </article>
+    </div>
+    <div class="evo-note"><b>关键纠正：</b>第二阶段的“软件故障、电气故障”不是“车没坏”，而是<b>坏得看不见</b>。老机械的坏是断口、电控的坏可能只是一个比特翻转、一行代码走错分支——后果一样真实。所以功能安全讨论的前提从来都是“它会坏”，问题只是坏了之后怎么办。</div>
+  </section>
+
+  <!-- 02 地基 -->
+  <section class="section">
+    <div class="sec-head"><span>02</span><h2>先说地基：最底下那层是机械可靠</h2></div>
+    <p class="sec-desc">说“功能安全是地基”没错，但要补一句：<b>地基下面还有地基</b>。所有电子安全手段，都建立在“铁件本身靠得住”之上。</p>
+    <div class="stack-wrap">
+      <div class="stack" role="img" aria-label="安全层级剖面：最底层机械可靠，其上依次是功能安全、预期功能安全、AI 安全">
+        <div class="tier t-mech"><span class="base-flag">最根本</span><b>机械可靠</b><small>强度够、疲劳寿命够、材料与工艺过关——传统安全（碰撞保护）也出自这一层</small></div>
+        <div class="tier t-fusa"><b>功能安全</b><small>管电子电气与可编程系统坏掉的时候</small></div>
+        <div class="tier t-sotif"><b>预期功能安全</b><small>管感知与功能本身能力不够的时候</small></div>
+        <div class="tier t-ai"><b>AI 安全</b><small>管数据与模型出错的时候</small></div>
+      </div>
+      <div class="pedal-card">
+        <h3>一个功能安全管不了的例子</h3>
+        <p>设想<b>刹车踏板支架</b>：它是一块金属件，靠强度和疲劳寿命工作。如果材料强度不够，或长期踩踏后疲劳断裂——你一脚踩下去，踏板塌了。</p>
+        <p>这时再完备的芯片监控、软件冗余都<b>无能为力</b>：信号根本没产生，谈不上处理。它只能靠机械设计、安全系数和耐久试验来防，属于最底层那一层。</p>
+        <p>这也是为什么：<b>一辆车的碰撞成绩、车身用料、关键件品质，永远是谈电子安全之前的第一课。</b></p>
+        <div class="pedal-svg">
+          <svg viewBox="0 0 340 120" fill="none" role="img" aria-label="示意图：刹车踏板支架出现疲劳裂纹">
+            <rect x="14" y="14" width="10" height="92" rx="3" fill="#94A3B8"/>
+            <path d="M24 30 L150 44 L196 96" stroke="#54677C" stroke-width="9" stroke-linecap="round"/>
+            <path class="crackline" d="M132 40 l7 7 -6 5 8 6" stroke="#D92D20" stroke-width="3" stroke-linecap="round"/>
+            <rect x="182" y="88" width="52" height="18" rx="5" fill="#54677C"/>
+            <text x="248" y="52" fill="#D92D20" font-size="12" font-weight="700">疲劳裂纹</text>
+            <text x="248" y="70" fill="#5D6B7D" font-size="11">强度 / 寿命问题</text>
+            <text x="14" y="114" fill="#5D6B7D" font-size="10.5">踏板支架：纯机械件，无芯片、无软件</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="safestate">
+      <div class="big">顺带纠正<br>一个误解</div>
+      <div>
+        <p>功能安全的目标<b>不是“出了故障必须安全停下”</b>。它的要求是：系统失效时，进入一个<b>预先定义好的“安全状态”</b>。停下只是其中一种——在有人驾驶的车上，<b>及时报警、把控制权稳稳交还给驾驶员</b>，同样是标准认可的安全状态；实在交不回去，才降级、减速、靠边停。</p>
+        <div class="ss-chips"><span>安全状态举例：报警 + 交还控制权</span><span>功能降级运行</span><span>减速靠边停车</span><span>切断高压电</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 剧场 -->
+  <section class="section">
+    <div class="sec-head"><span>03</span><h2>小剧场：四种“出事”完全不一样</h2></div>
+    <p class="sec-desc">点一点切换。分清出事的种类，才看得懂新闻里到底是谁的问题。</p>
+    <div class="theatre">
+      <div class="theatre-tabs" role="tablist">
+        <button class="tab active" data-scene="0">铁件断了</button>
+        <button class="tab" data-scene="1">电控坏了</button>
+        <button class="tab" data-scene="2">它看错了</button>
+        <button class="tab" data-scene="3">AI 没见过</button>
+      </div>
+      <div class="theatre-body">
+        <div class="scene" id="sceneBox"></div>
+        <div class="theatre-text" id="sceneText"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 标准名片 -->
+  <section class="section">
+    <div class="sec-head"><span>04</span><h2>三大标准名片（附中国国标）</h2></div>
+    <p class="sec-desc">国际标准与中国国标一一对应，买车、看新闻时两边都能对上号。年份是现行最新版本。</p>
+    <div class="cards">
+      <article class="std">
+        <header><span class="code" style="color:var(--fusa)">26262</span><span class="year">ISO 26262<br>2018 年 · 第二版</span></header>
+        <h3>功能安全 FuSa</h3>
+        <p>专为电子电气及可编程系统而来，管两种失效：元器件说坏就坏的<b>随机硬件失效</b>，和设计、代码埋下祸根的<b>系统性失效</b>。</p>
+        <ul><li>核心词：ASIL 等级 A–D，D 最严</li><li>方法：冗余、监控、进入安全状态</li><li>例子：双芯片互检、制动双回路</li></ul>
+        <div class="gb"><b>中国国标</b><br>GB/T 34590-2022《道路车辆 功能安全》</div>
+      </article>
+      <article class="std">
+        <header><span class="code" style="color:var(--sotif)">21448</span><span class="year">ISO 21448<br>2022 年发布</span></header>
+        <h3>预期功能安全 SOTIF</h3>
+        <p>因复杂环境感知而生：硬件软件都没坏，但功能有<b>性能局限</b>，再叠加用户<b>可预见的误用</b>，照样出事。它不修零件，修的是认知盲区。</p>
+        <ul><li>核心词：未知不安全场景</li><li>方法：海量场景库、扩大测试覆盖</li><li>例子：逆光、异形车、施工改道</li></ul>
+        <div class="gb"><b>中国国标</b><br>GB/T 43267-2023《道路车辆 预期功能安全》</div>
+      </article>
+      <article class="std">
+        <header><span class="code" style="color:var(--ai)">8800</span><span class="year">ISO/PAS 8800<br>2024 年发布</span></header>
+        <h3>道路车辆 AI 安全</h3>
+        <p>因 AI 引入<b>数据、模型与训练</b>而生：训练数据没覆盖的场景、数据分布的变化、模型说不清理由的判断，都是它要管的新风险。</p>
+        <ul><li>核心词：数据质量、泛化、置信度</li><li>方法：数据治理、不确定时降级兜底</li><li>例子：训练时没下过雪的雪天场景</li></ul>
+        <div class="gb"><b>中国国标</b><br><span class="pending">对应国标尚在制定中</span>（如实标注，发布后本合集会更新）</div>
+      </article>
+    </div>
+    <div class="cyber"><b>顺带一提（不在本合集核心范围）：</b>还有<b>信息安全</b>——防的是黑客与数据窃取，对应 ISO/SAE 21434:2021 与我国强制性国标 GB 44495-2024《汽车整车信息安全技术要求》。它防“坏人”，本合集讲的是防“坏掉、看错、学偏”，两者别混。</div>
+    <p style="font-size:12px;color:var(--muted);margin-top:10px">注：ISO/PAS 8800 目前为 PAS（可公开规范）阶段，仍在迭代；26262 与 21448 及对应国标已是量产开发常用依据。具体以标准原文与车企合规声明为准。</p>
+  </section>
+
+  <!-- 05 对号入座 -->
+  <section class="section">
+    <div class="sec-head"><span>05</span><h2>新闻里的那些事，对号入座</h2></div>
+    <p class="sec-desc">下次刷到汽车新闻，先按进化线分一分类，你会比标题党多看一层。</p>
+    <div class="match">
+      <div class="match-row"><div><h4>刹车踏板支架断裂、转向拉杆锈断</h4><p>金属件的强度与疲劳问题。电子系统再先进也拦不住，先问材料、设计与耐久验证。</p></div><span class="badge me">机械可靠 · 传统安全</span></div>
+      <div class="match-row"><div><h4>行驶中突然失去动力 / 转向助力消失</h4><p>多为电控或软件故障触发——这是“坏了”，只是坏在看不见的地方。看它有没有冗余、安全状态设计。</p></div><span class="badge f">功能安全 26262</span></div>
+      <div class="match-row"><div><h4>幽灵刹车：前面没车，它猛踩一脚</h4><p>系统没坏，是感知把阴影、井盖、广告牌误判成了障碍物 — 典型的“看错了”。</p></div><span class="badge s">SOTIF 21448</span></div>
+      <div class="match-row"><div><h4>对静止故障车 / 异形车识别失败</h4><p>场景库与训练样本里这类情况太少，属于功能局限与未知场景。</p></div><span class="badge s">SOTIF 21448</span></div>
+      <div class="match-row"><div><h4>语音助手一本正经胡说、智驾在陌生城市“发懵”</h4><p>模型泛化不足、置信度不自知 — AI 需要先学会“知道自己不知道”。</p></div><span class="badge a">AI 安全 8800</span></div>
+      <div class="match-row"><div><h4>OTA 升级后出现新毛病</h4><p>代码变更引入的系统性问题：变更管理与回归测试没跟上，根子在功能安全的流程一环。</p></div><span class="badge f">功能安全 · 系统性失效</span></div>
+    </div>
+  </section>
+
+  <!-- 06 小测 -->
+  <section class="section">
+    <div class="quiz">
+      <h3>30 秒小测：你分清了吗？</h3>
+      <p>点选答案，立刻看对错。错了也没关系，这正是本合集要解决的。</p>
+      <div class="quiz-q" data-answer="fusa"><b>Q1 · 转向控制器的芯片随机失效，方向盘突然变重，但系统提前报警并平稳交还控制。</b><div class="opts"><button class="opt" data-v="mech">机械问题</button><button class="opt" data-v="fusa">电控坏了 · 功能安全</button><button class="opt" data-v="sotif">看错了 · SOTIF</button></div><div class="ans">对：这是“坏了”——随机硬件失效，功能安全的典型考题。它做对了：报警 + 交还控制权，就是一种安全状态，不必非停下不可。</div></div>
+      <div class="quiz-q" data-answer="mech"><b>Q2 · 用了八年的车，刹车踏板支架在一次急刹时疲劳断裂。</b><div class="opts"><button class="opt" data-v="fusa">功能安全</button><button class="opt" data-v="mech">机械可靠 · 传统安全</button><button class="opt" data-v="ai">AI 安全</button></div><div class="ans">对：纯金属件的疲劳问题，归最底层的机械可靠。没有任何芯片和软件参与，功能安全对此无能为力——地基不牢，上面全白搭。</div></div>
+      <div class="quiz-q" data-answer="sotif"><b>Q3 · 大晴天，智驾把限速牌旁的广告数字当成了限速，突然加速。</b><div class="opts"><button class="opt" data-v="fusa">电控坏了</button><button class="opt" data-v="sotif">看错了 · SOTIF</button><button class="opt" data-v="ai">AI 学偏了</button></div><div class="ans">对：硬件软件都没坏，是感知功能有局限。SOTIF 管这类“本事不够”，办法是把这类场景测出来、标出来、管起来。</div></div>
+    </div>
+  </section>
+
+  <!-- 07 清单 -->
+  <section class="section">
+    <div class="sec-head"><span>06</span><h2>普通人能做什么？</h2></div>
+    <div class="checklist">
+      <div class="check-item"><span class="check-num">1</span><div><h4>先看“铁”，再看“屏”</h4><p>碰撞成绩、车身结构、关键件品质是最底层的地基。地基虚了，屏幕再大、芯片再强都补不回来。</p></div></div>
+      <div class="check-item"><span class="check-num">2</span><div><h4>买车多问一句：坏了怎么办？</h4><p>制动、转向、供电有没有冗余？电控失效时如何报警、如何交还控制权？销售答不清，比少一块屏幕更值得在意。</p></div></div>
+      <div class="check-item"><span class="check-num">3</span><div><h4>别把“辅助驾驶”当“自动驾驶”</h4><p>目前量产多为 L2 组合驾驶辅助，手不能离、眼不能离。这正是 SOTIF 反复强调的“可预见误用”。</p></div></div>
+      <div class="check-item"><span class="check-num">4</span><div><h4>在它的“舒适区”里用智驾</h4><p>暴雨、逆光、施工、无标线路段，是感知最容易误判的时候 — 主动接管是最便宜的安全冗余。</p></div></div>
+      <div class="check-item"><span class="check-num">5</span><div><h4>OTA 别无脑秒升，出问题先留证据</h4><p>大版本先看口碑与召回公告；真出了问题，记下时间、天气、车速和当时开启的功能，行车记录与车机日志比争论管用。</p></div></div>
+    </div>
+  </section>
+
+  <!-- 08 合集计划 -->
+  <section class="section">
+    <div class="sec-head"><span>07</span><h2>这个合集，接下来这样更</h2></div>
+    <p class="sec-desc">共 8 篇，每天一篇，10 月 30 日收官。每篇只讲透一件事，保持多图、少字、能转述给家人听。</p>
+    <div class="timeline">
+      <div class="ep now"><span class="no">第1篇</span><div><h4>总览：车“坏”的方式，变了四次<span class="today">今天 · 你正在看</span></h4><p>机械 → 电控 → 感知 → AI：三大标准的来历与分工。</p></div></div>
+      <div class="ep"><span class="no">第2篇</span><div><h4>功能安全 ISO 26262（10/24 周六）</h4><p>当车“坏了”的时候：随机失效、系统性失效、冗余与安全状态。</p></div></div>
+      <div class="ep"><span class="no">第3篇</span><div><h4>预期功能安全 ISO 21448（10/25 周日）</h4><p>幽灵刹车、传感器看错：没坏，也会出事。</p></div></div>
+      <div class="ep"><span class="no">第4篇</span><div><h4>AI 安全 ISO/PAS 8800（10/26 周一）</h4><p>AI 上车后的新麻烦：数据、长尾场景、说不清的判断。</p></div></div>
+      <div class="ep"><span class="no">第5篇</span><div><h4>智能座舱（10/27 周二）</h4><p>大屏、语音、驾驶员监控，各有一本安全账。</p></div></div>
+      <div class="ep"><span class="no">第6篇</span><div><h4>电动化（10/28 周三）</h4><p>电池热失控、高压电，和功能安全的交界。</p></div></div>
+      <div class="ep"><span class="no">第7篇</span><div><h4>案例拆解（10/29 周四）</h4><p>把市面上的事故与召回，按这四类原因逐一归位。</p></div></div>
+      <div class="ep"><span class="no">第8篇</span><div><h4>消费者行动清单 · 收官（10/30 周五）</h4><p>买车怎么问、试驾查什么、出问题如何留证。</p></div></div>
+    </div>
+  </section>
+
+  <div class="remember"><p>铁要结实 · 电坏得明白 · 眼有边界 · 脑要自知<br><span>记住这四句，你就有了看懂汽车安全新闻的钥匙。明天见 — 第 2 篇深挖功能安全。</span></p></div>
+
+  <div class="footer">汽车安全科普合集 · 第 1 篇（总览）修订版草案 — 供审阅<br>内容为通俗科普，不替代标准原文、车企合规文件与官方召回公告。文中场景为典型化示意，帮助理解分类，不指向具体品牌车型。标准版本：ISO 26262:2018 / GB/T 34590-2022；ISO 21448:2022 / GB/T 43267-2023；ISO/PAS 8800:2024（对应国标制定中）；信息安全 ISO/SAE 21434:2021 / GB 44495-2024。</div>
+</div>
+
+<script>
+var scenes=[
+ {title:"铁件断了 — 机械可靠的问题",desc:"踏板支架、转向拉杆这类纯机械件，坏法只有两种：<b>强度不够</b>，一次就断；<b>疲劳</b>，次数攒够了再断。没有任何电子系统参与，功能安全再完备也拦不住——只能靠材料、设计安全系数和耐久试验。",tags:["传统安全","关键词：强度 · 疲劳寿命","最底层的地基"],svg:'<svg viewBox="0 0 360 180"><rect width="360" height="180" rx="12" fill="#EDF0F4"/><rect x="26" y="22" width="12" height="118" rx="4" fill="#94A3B8"/><path d="M38 44 L168 60 L224 122" stroke="#54677C" stroke-width="11" stroke-linecap="round" fill="none"/><path d="M146 52 l9 9 -8 7 10 8" stroke="#D92D20" stroke-width="3.5" fill="none" stroke-linecap="round"/><rect x="206" y="112" width="62" height="22" rx="6" fill="#54677C"/><text x="262" y="46" fill="#D92D20" font-size="13" font-weight="700">疲劳裂纹！</text><text x="180" y="162" fill="#5D6B7D" font-size="11.5" text-anchor="middle">一脚踩下，踏板塌了 — 信号根本没产生</text></svg>'},
+ {title:"电控坏了 — 功能安全登场",desc:"芯片随机失效，或者软件藏着系统性缺陷——<b>这也是“坏了”，只是坏得看不见</b>。功能安全的答卷不是“必须停下”，而是进入安全状态：报警、把控制权稳稳交还给驾驶员，或降级运行。",tags:["ISO 26262 · GB/T 34590","关键词：随机失效 · 系统性失效","安全状态 ≠ 停车"],svg:'<svg viewBox="0 0 360 180"><rect width="360" height="180" rx="12" fill="#EFF3FF"/><rect x="30" y="98" width="300" height="8" rx="4" fill="#CBD5E1"/><rect x="120" y="64" width="120" height="42" rx="14" fill="#1E4ED8"/><text x="180" y="90" fill="white" font-size="13" font-weight="700" text-anchor="middle">控制器芯片失效</text><path d="M180 64 L168 36 L184 48 L176 22" stroke="#F59E0B" stroke-width="3" fill="none" stroke-linecap="round"/><circle cx="145" cy="110" r="12" fill="#17202E"/><circle cx="215" cy="110" r="12" fill="#17202E"/><rect x="36" y="24" width="196" height="28" rx="999" fill="#17202E"/><text x="134" y="43" fill="white" font-size="11.5" text-anchor="middle">报警 + 交还控制权（安全状态）</text><text x="180" y="152" fill="#475569" font-size="11.5" text-anchor="middle">看不见的坏：一个比特翻转、一段代码走错</text></svg>'},
+ {title:"它看错了 — 预期功能安全登场",desc:"硬件软件全都完好，但大雾、逆光或异形目标让感知“看花了眼”。问题不在坏，在于<b>功能本身有边界</b>——要靠海量场景库把边界测出来、标出来，该提醒接管时就提醒。",tags:["ISO 21448 · GB/T 43267","关键词：误判 · 漏检 · 场景库","能力边界问题"],svg:'<svg viewBox="0 0 360 180"><rect width="360" height="180" rx="12" fill="#E6F4F0"/><ellipse cx="90" cy="55" rx="55" ry="18" fill="white" opacity=".8"/><ellipse cx="270" cy="45" rx="60" ry="16" fill="white" opacity=".7"/><rect x="30" y="105" width="300" height="8" rx="4" fill="#A7C4BC"/><rect x="55" y="68" width="90" height="40" rx="12" fill="#07856B"/><text x="100" y="93" fill="white" font-size="12" font-weight="700" text-anchor="middle">它以为没车</text><rect x="238" y="58" width="52" height="52" rx="8" fill="#334155"/><text x="264" y="88" fill="white" font-size="11" text-anchor="middle">实际有车</text><line x1="145" y1="82" x2="232" y2="82" stroke="#F59E0B" stroke-width="2" stroke-dasharray="5 5"/><text x="180" y="145" fill="#475569" font-size="11.5" text-anchor="middle">雾 + 逆光 → 感知置信度骤降，应提醒接管</text></svg>'},
+ {title:"AI 没见过 — AI 安全登场",desc:"模型只在南方城市数据里学过开车，到了北方雪地、遇到训练中没出现过的障碍物，它可能非常自信地给出错误判断。AI 安全要求它先学会一件事：<b>不确定时，慢下来、交出来</b>。",tags:["ISO/PAS 8800 · 国标制定中","关键词：数据 · 模型 · 训练","知道自己不知道"],svg:'<svg viewBox="0 0 360 180"><rect width="360" height="180" rx="12" fill="#FFF3E2"/><rect x="30" y="105" width="300" height="8" rx="4" fill="#E5C07B"/><rect x="48" y="66" width="96" height="42" rx="12" fill="#C46A00"/><text x="96" y="92" fill="white" font-size="12" font-weight="700" text-anchor="middle">AI：这是路？</text><text x="268" y="82" font-size="30" text-anchor="middle">🐂</text><text x="268" y="105" font-size="11" fill="#7C4A03" text-anchor="middle">训练集里没有！</text><rect x="88" y="128" width="184" height="26" rx="999" fill="#17202E"/><text x="180" y="145" fill="white" font-size="11" text-anchor="middle">低置信度 → 减速 + 请求接管</text></svg>'}
+];
+function renderScene(i){
+  document.getElementById('sceneBox').innerHTML=scenes[i].svg;
+  var t=scenes[i];
+  document.getElementById('sceneText').innerHTML='<h3>'+t.title+'</h3><p>'+t.desc+'</p><div class="kv">'+t.tags.map(function(x){return '<span>'+x+'</span>'}).join('')+'</div>';
+  var tabs=document.querySelectorAll('.tab'); tabs.forEach(function(b,idx){b.classList.toggle('active',idx===i)});
+}
+document.querySelectorAll('.tab').forEach(function(b){b.addEventListener('click',function(){renderScene(parseInt(b.dataset.scene,10))})});
+renderScene(0);
+document.querySelectorAll('.quiz-q').forEach(function(q){
+  q.querySelectorAll('.opt').forEach(function(btn){btn.addEventListener('click',function(){
+    var ok=btn.dataset.v===q.dataset.answer;
+    q.querySelectorAll('.opt').forEach(function(o){o.classList.remove('correct','wrong')});
+    btn.classList.add(ok?'correct':'wrong');
+    q.querySelector('.ans').style.display='block';
+    if(!ok){ q.querySelector('[data-v="'+q.dataset.answer+'"]').classList.add('correct'); }
+  })});
+});
+</script>
+</body>
+</html>
