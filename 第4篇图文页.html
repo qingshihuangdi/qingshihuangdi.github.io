@@ -1,0 +1,620 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="data:," />
+    <title>汽车安全科普 · 第4篇 AI安全</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&family=Noto+Serif+SC:wght@700;900&display=swap" rel="stylesheet" />
+    <style>
+      :root{
+        --bg:#f6f3ec;
+        --surface:#fffdf8;
+        --surface-2:#efe9dc;
+        --ink:#1e2422;
+        --muted:#5d675f;
+        --line:#ddd5c3;
+        --accent:#c2590d;
+        --accent-ink:#a34a08;
+        --accent-soft:#fbe9d7;
+        --teal:#0e7a68;
+        --teal-soft:#dcf0ea;
+        --amber:#b07d10;
+        --amber-soft:#f7ecd0;
+        --rose:#b3402e;
+        --rose-soft:#f9e2dc;
+        --shadow:0 10px 30px rgba(30,36,34,.08);
+        color-scheme:light dark;
+      }
+      @media (prefers-color-scheme: dark){
+        :root{
+          --bg:#131718;
+          --surface:#1c2223;
+          --surface-2:#242c2d;
+          --ink:#ece8dd;
+          --muted:#a3aca2;
+          --line:#333d3e;
+          --accent:#f09a4e;
+          --accent-ink:#f5b878;
+          --accent-soft:#3a2a1a;
+          --teal:#4cc2ab;
+          --teal-soft:#173832;
+          --amber:#e3b64f;
+          --amber-soft:#38300f;
+          --rose:#ef8a76;
+          --rose-soft:#3c231d;
+          --shadow:0 10px 30px rgba(0,0,0,.35);
+        }
+      }
+      *{box-sizing:border-box}
+      html{scroll-behavior:smooth}
+      body{
+        margin:0;background:var(--bg);color:var(--ink);
+        font-family:"Noto Sans SC",system-ui,-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;
+        line-height:1.65;-webkit-font-smoothing:antialiased;
+      }
+      .wrap{max-width:880px;margin:0 auto;padding:28px 20px 64px}
+      .serif{font-family:"Noto Serif SC","Noto Sans SC",serif}
+
+      /* ---------- 页首 ---------- */
+      .series-line{
+        display:flex;align-items:center;gap:12px;
+        font-size:14px;font-weight:700;letter-spacing:.14em;color:var(--accent-ink);
+      }
+      .series-line::after{content:"";flex:1;height:1px;background:var(--line)}
+      h1{
+        font-family:"Noto Serif SC","Noto Sans SC",serif;font-weight:900;
+        font-size:clamp(30px,6.4vw,46px);line-height:1.25;margin:18px 0 14px;
+      }
+      h1 .hl{color:var(--accent-ink)}
+      .lead{font-size:17px;color:var(--ink);margin:0 0 6px;max-width:34em}
+      .lead .q{font-weight:700}
+      .meta{font-size:13px;color:var(--muted);margin:10px 0 0}
+
+      /* ---------- 通用区块 ---------- */
+      section{margin-top:52px}
+      .sec-head{display:flex;align-items:baseline;gap:12px;margin-bottom:16px}
+      .sec-num{
+        font-family:"Noto Serif SC",serif;font-weight:900;font-size:15px;color:var(--surface);
+        background:var(--ink);border-radius:6px;padding:2px 9px;flex:none;
+      }
+      .sec-head h2{font-size:22px;margin:0;font-weight:900;letter-spacing:.01em}
+      .card{
+        background:var(--surface);border:1px solid var(--line);border-radius:14px;
+        box-shadow:var(--shadow);
+      }
+      .reveal.in{animation:rise .55s ease both}
+      @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+      @media (prefers-reduced-motion: reduce){
+        .reveal.in{animation:none}
+        html{scroll-behavior:auto}
+      }
+
+      /* ---------- 钩子场景 ---------- */
+      .scene-card{padding:18px 18px 14px}
+      .scene-svg{width:100%;height:auto;display:block}
+      .car-move{transition:transform 1s cubic-bezier(.3,.7,.3,1)}
+      .scene-after .car-move{transform:translateX(118px)}
+      .jolt{animation:none}
+      .scene-after .jolt{animation:jolt .5s ease .55s 1}
+      @keyframes jolt{0%,100%{transform:translateY(0)}30%{transform:translateY(-3px) rotate(-.6deg)}65%{transform:translateY(2px)}}
+      .brake-light{opacity:.25;transition:opacity .3s}
+      .scene-before .brake-light{opacity:1}
+      .scene-after .brake-light{opacity:1}
+      .qmark{opacity:0;transition:opacity .4s ease .5s}
+      .scene-after .qmark{opacity:1}
+      .calm{opacity:1;transition:opacity .3s}
+      .scene-after .calm{opacity:0}
+      .toggle-row{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+      .toggle-btn{
+        appearance:none;border:1.5px solid var(--line);background:var(--surface-2);color:var(--ink);
+        font:inherit;font-weight:700;font-size:15px;border-radius:999px;padding:8px 20px;cursor:pointer;
+        transition:background .2s,border-color .2s,color .2s;
+      }
+      .toggle-btn[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+      .toggle-btn:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+      .scene-cap{margin:12px 2px 4px;font-size:15.5px}
+      .scene-cap b{color:var(--accent-ink)}
+      .scene-q{
+        margin-top:16px;padding:14px 16px;border-radius:10px;background:var(--accent-soft);
+        font-size:16.5px;font-weight:700;
+      }
+      .scene-q span{color:var(--accent-ink)}
+
+      /* ---------- 类比双栏 ---------- */
+      .duo{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+      @media (max-width:640px){.duo{grid-template-columns:1fr}}
+      .duo .card{padding:18px}
+      .duo h3{margin:0 0 4px;font-size:17px;font-weight:900}
+      .duo .sub{font-size:13px;color:var(--muted);margin:0 0 12px}
+      .rulebook{font-size:14px;background:var(--surface-2);border-radius:10px;padding:12px 14px}
+      .rulebook div{display:flex;justify-content:space-between;gap:10px;padding:5px 0;border-bottom:1px dashed var(--line)}
+      .rulebook div:last-child{border-bottom:none}
+      .rulebook .do{font-weight:700;color:var(--teal);white-space:nowrap}
+      .examples{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+      .ex{
+        border-radius:8px;padding:8px 4px 6px;text-align:center;font-size:12px;font-weight:700;
+        background:var(--teal-soft);color:var(--ink);
+      }
+      .ex svg{display:block;margin:0 auto 3px}
+      .ex.dim{opacity:.45}
+      .analogy-note{margin:14px 2px 0;font-size:15.5px}
+      .analogy-note b{color:var(--teal)}
+
+      /* ---------- 层级主图 ---------- */
+      .stack{margin-top:22px;display:flex;flex-direction:column;gap:10px}
+      .layer{
+        border:1.5px solid var(--line);border-radius:12px;background:var(--surface);
+        padding:0;overflow:hidden;text-align:left;width:100%;font:inherit;color:inherit;cursor:pointer;
+        transition:border-color .2s;
+      }
+      .layer:hover{border-color:var(--accent)}
+      .layer:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+      .layer-top{display:flex;align-items:center;gap:12px;padding:13px 16px}
+      .layer-badge{
+        flex:none;font-weight:900;font-size:13px;border-radius:6px;padding:3px 9px;color:#fff;
+      }
+      .lb-base{background:#6d6252}.lb-fusa{background:var(--teal)}.lb-sotif{background:var(--amber)}.lb-ai{background:var(--accent)}
+      @media (prefers-color-scheme: dark){
+        .lb-sotif{color:#241c02}.lb-base{color:#fff}
+      }
+      .layer-name{font-weight:900;font-size:16.5px}
+      .layer-tag{margin-left:auto;font-size:13.5px;color:var(--muted);text-align:right}
+      .layer-chev{flex:none;color:var(--muted);transition:transform .25s;font-size:13px}
+      .layer.open .layer-chev{transform:rotate(180deg)}
+      .layer-detail{display:none;padding:0 16px 15px 16px;font-size:14.5px;color:var(--ink)}
+      .layer.open .layer-detail{display:block}
+      .layer-detail .std{
+        display:inline-block;margin-top:8px;font-size:12.5px;font-weight:700;color:var(--muted);
+        border:1px solid var(--line);border-radius:999px;padding:2px 10px;
+      }
+      .stack-base-note{font-size:13.5px;color:var(--muted);text-align:center;margin:4px 0 0}
+      .layer.l-base{margin-left:0}
+      .layer.l-fusa{margin-left:clamp(0px,3vw,26px)}
+      .layer.l-sotif{margin-left:clamp(0px,6vw,52px)}
+      .layer.l-ai{margin-left:clamp(0px,9vw,78px);border-color:var(--accent)}
+      @media (max-width:640px){
+        .layer-tag{display:none}
+        .layer.l-fusa,.layer.l-sotif,.layer.l-ai{margin-left:0}
+      }
+
+      /* ---------- 三小节 ---------- */
+      .prob{display:grid;gap:14px}
+      .prob .card{padding:20px}
+      .prob-head{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+      .prob-idx{
+        font-family:"Noto Serif SC",serif;font-size:26px;font-weight:900;color:var(--accent-ink);line-height:1;
+      }
+      .prob h3{margin:0;font-size:19px;font-weight:900}
+      .prob p{margin:0;font-size:15.5px;max-width:36em}
+      /* 数据偏条形图 */
+      .bars{margin-top:16px;display:grid;gap:9px}
+      .bar-row{display:grid;grid-template-columns:118px 1fr 42px;align-items:center;gap:10px;font-size:13px}
+      .bar-row .nm{font-weight:700}
+      .bar-track{height:14px;border-radius:7px;background:var(--surface-2);overflow:hidden}
+      .bar-fill{height:100%;border-radius:7px;background:var(--teal);width:0;transition:width 1s ease}
+      .bars.in .bar-fill{width:var(--w)}
+      .bar-row.hot .bar-fill{background:var(--rose)}
+      .bar-row .lv{color:var(--muted);text-align:right;font-size:12.5px}
+      @media (prefers-reduced-motion: reduce){.bar-fill{transition:none}}
+      /* 长尾 */
+      .tail-svg{width:100%;height:auto;display:block;margin-top:10px}
+      .combo{margin-top:14px;background:var(--surface-2);border-radius:10px;padding:14px}
+      .combo-slots{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+      .slot{
+        background:var(--surface);border:1.5px solid var(--line);border-radius:8px;
+        padding:7px 12px;font-weight:700;font-size:14.5px;
+      }
+      .slot small{display:block;font-size:11px;color:var(--muted);font-weight:500;letter-spacing:.08em}
+      .combo-foot{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+      .combo-verdict{font-weight:900;font-size:15px}
+      .combo-verdict.seen{color:var(--teal)}
+      .combo-verdict.unseen{color:var(--rose)}
+      .btn{
+        appearance:none;border:none;background:var(--ink);color:var(--bg);font:inherit;font-weight:700;
+        font-size:14.5px;border-radius:999px;padding:9px 18px;cursor:pointer;
+      }
+      .btn:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+      .btn:active{transform:scale(.97)}
+      /* 版本时间线 */
+      .versions{margin-top:16px;display:grid;grid-template-columns:1fr auto 1fr auto 1fr;align-items:stretch;gap:8px}
+      @media (max-width:640px){.versions{grid-template-columns:1fr}.varrow{transform:rotate(90deg);justify-self:center}}
+      .ver{background:var(--surface-2);border-radius:10px;padding:12px 14px}
+      .ver .v{font-weight:900;font-size:16px}
+      .ver .chg{font-size:13px;color:var(--muted);margin:2px 0 8px}
+      .ver .beh{font-size:13.5px;font-weight:700;background:var(--surface);border:1px solid var(--line);border-radius:7px;padding:4px 9px;display:inline-block}
+      .varrow{align-self:center;color:var(--accent-ink);font-weight:900;font-size:18px}
+      .ota-tag{font-size:11px;font-weight:900;letter-spacing:.1em;color:var(--accent-ink)}
+
+      /* ---------- 市面上的问题 ---------- */
+      .market{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+      @media (max-width:640px){.market{grid-template-columns:1fr}}
+      .market .card{padding:20px}
+      .market h3{margin:0 0 8px;font-size:17px;font-weight:900}
+      .market p{margin:0;font-size:15px}
+      .market .fact{
+        margin-top:12px;font-size:13.5px;background:var(--amber-soft);border-radius:8px;padding:9px 12px;font-weight:700;
+      }
+      .aside-line{
+        margin-top:14px;font-size:14px;color:var(--muted);border-top:1px dashed var(--line);padding-top:12px;
+      }
+
+      /* ---------- 带走 + 预告 ---------- */
+      .takeaway{
+        margin-top:52px;background:var(--ink);color:var(--bg);border-radius:16px;padding:30px 26px;
+      }
+      .takeaway .k{font-size:13px;font-weight:900;letter-spacing:.18em;opacity:.65;margin:0 0 10px}
+      .takeaway p.big{
+        font-family:"Noto Serif SC",serif;font-weight:900;font-size:clamp(20px,4.4vw,27px);
+        line-height:1.55;margin:0;
+      }
+      .takeaway .big em{font-style:normal;color:var(--accent)}
+      @media (prefers-color-scheme: dark){.takeaway .big em{color:var(--accent)}}
+      .next{
+        margin-top:14px;display:flex;align-items:center;gap:16px;background:var(--surface);
+        border:1px solid var(--line);border-radius:14px;padding:18px 20px;box-shadow:var(--shadow);
+      }
+      .next .n-badge{
+        flex:none;font-weight:900;font-size:13px;color:var(--accent-ink);background:var(--accent-soft);
+        border-radius:8px;padding:6px 10px;text-align:center;line-height:1.4;
+      }
+      .next h3{margin:0;font-size:18px;font-weight:900}
+      .next p{margin:2px 0 0;font-size:14px;color:var(--muted)}
+      .next .arr{margin-left:auto;font-size:22px;color:var(--muted);flex:none}
+      footer{
+        margin-top:44px;padding-top:16px;border-top:1px solid var(--line);
+        font-size:13px;color:var(--muted);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+
+      <!-- 页首 -->
+      <div class="series-line">汽车安全科普合集 · 第 4 篇 / 共 8 篇</div>
+      <h1>AI安全：<span class="hl">AI上车</span>后的新麻烦</h1>
+      <p class="lead">
+        上周刚做完一次 OTA 升级，这周开同一辆车、走同一条回家的路，它过路口时好像换了一种脾气：
+        该慢的时候抢了一拍，该果断的时候又犹豫了。
+      </p>
+      <p class="meta">图和动画为主 · 约 4 分钟看完</p>
+
+      <!-- 1 场景钩子 -->
+      <section aria-label="场景钩子">
+        <div class="card scene-card reveal" id="sceneCard">
+          <svg class="scene-svg" viewBox="0 0 720 300" role="img" aria-label="同一辆车在同一个路口，升级前后刹车位置不同的示意图">
+            <!-- 天空与建筑 -->
+            <rect x="0" y="0" width="720" height="196" fill="var(--teal-soft)" opacity=".55"/>
+            <rect x="36" y="66" width="74" height="130" fill="var(--surface-2)"/>
+            <rect x="126" y="92" width="54" height="104" fill="var(--surface-2)"/>
+            <rect x="586" y="58" width="88" height="138" fill="var(--surface-2)"/>
+            <circle cx="652" cy="42" r="20" fill="var(--amber-soft)" stroke="var(--amber)" stroke-width="2"/>
+            <!-- 树 -->
+            <circle cx="222" cy="140" r="24" fill="var(--teal)" opacity=".5"/>
+            <rect x="219" y="158" width="6" height="38" fill="var(--muted)"/>
+            <!-- 路面 -->
+            <rect x="0" y="196" width="720" height="104" fill="var(--surface-2)"/>
+            <rect x="0" y="196" width="720" height="6" fill="var(--line)"/>
+            <!-- 斑马线 -->
+            <g fill="var(--surface)">
+              <rect x="520" y="206" width="26" height="84" rx="3" transform="skewX(-8)"/>
+              <rect x="560" y="206" width="26" height="84" rx="3" transform="skewX(-8)"/>
+              <rect x="600" y="206" width="26" height="84" rx="3" transform="skewX(-8)"/>
+            </g>
+            <!-- 停车线（升级前） -->
+            <line x1="352" y1="202" x2="352" y2="294" stroke="var(--teal)" stroke-width="3" stroke-dasharray="7 6" opacity=".7"/>
+            <text x="352" y="192" text-anchor="middle" font-size="13" font-weight="700" fill="var(--teal)">升级前停这儿</text>
+            <!-- 行人 -->
+            <g>
+              <circle cx="668" cy="216" r="9" fill="var(--ink)"/>
+              <path d="M668 225 v26 M668 233 l-11 9 M668 233 l11 7 M668 251 l-9 22 M668 251 l10 21" stroke="var(--ink)" stroke-width="4" stroke-linecap="round" fill="none"/>
+            </g>
+            <!-- 问号气泡（升级后出现） -->
+            <g class="qmark">
+              <rect x="392" y="66" width="46" height="36" rx="10" fill="var(--surface)" stroke="var(--accent)" stroke-width="2"/>
+              <text x="415" y="92" text-anchor="middle" font-size="22" font-weight="900" fill="var(--accent-ink)">?</text>
+              <path d="M404 102 l4 10 l6 -10z" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.5"/>
+            </g>
+            <!-- 车 -->
+            <g class="car-move">
+              <g class="jolt">
+                <path d="M96 236 q4 -26 30 -30 l22 -16 q6 -5 14 -5 h56 q9 0 15 6 l18 17 q30 3 40 14 q5 6 5 14 z" fill="var(--accent)"/>
+                <rect x="146" y="192" width="34" height="15" rx="4" fill="var(--teal-soft)"/>
+                <rect x="186" y="192" width="30" height="15" rx="4" fill="var(--teal-soft)"/>
+                <rect x="88" y="230" width="10" height="9" rx="3" class="brake-light" fill="#e2483d"/>
+                <rect x="290" y="230" width="9" height="9" rx="3" fill="#f5c542"/>
+                <circle cx="140" cy="240" r="15" fill="var(--ink)"/><circle cx="140" cy="240" r="6" fill="var(--surface)"/>
+                <circle cx="248" cy="240" r="15" fill="var(--ink)"/><circle cx="248" cy="240" r="6" fill="var(--surface)"/>
+              </g>
+            </g>
+            <!-- 安心标注（升级前） -->
+            <g class="calm">
+              <text x="196" y="140" text-anchor="middle" font-size="14" font-weight="700" fill="var(--teal)">早早减速，从容停下</text>
+            </g>
+          </svg>
+
+          <div class="toggle-row" role="group" aria-label="切换升级前后">
+            <button class="toggle-btn" id="btnBefore" aria-pressed="true">升级前</button>
+            <button class="toggle-btn" id="btnAfter" aria-pressed="false">OTA 升级后</button>
+          </div>
+          <p class="scene-cap" id="sceneCap">同一辆车、同一个人、同一条路：离斑马线还有一段距离，它就开始<b>慢慢减速</b>，停得稳稳当当。</p>
+        </div>
+        <div class="scene-q reveal">零件没坏，它也没“看错”路——变的是它<span>做判断的办法</span>。AI 上车之后，安全到底要多管什么？</div>
+      </section>
+
+      <!-- 2 核心概念 -->
+      <section aria-label="核心概念">
+        <div class="sec-head"><span class="sec-num">核心</span><h2>AI 不是背规则手册的，是“看例子”学出来的</h2></div>
+        <div class="duo">
+          <div class="card reveal">
+            <h3>老办法：照着手册执行</h3>
+            <p class="sub">传统软件的逻辑，人一条一条写得明明白白</p>
+            <div class="rulebook">
+              <div><span>前方有行人</span><span class="do">→ 减速</span></div>
+              <div><span>跟车太近</span><span class="do">→ 刹车</span></div>
+              <div><span>车道线消失</span><span class="do">→ 提醒接管</span></div>
+              <div><span>手册没写的</span><span class="do">→ 不会发生？</span></div>
+            </div>
+          </div>
+          <div class="card reveal">
+            <h3>AI 的办法：像学徒看例子</h3>
+            <p class="sub">看过海量真实场景之后，自己总结出“该怎么做”</p>
+            <div class="examples" aria-hidden="true">
+              <div class="ex"><svg width="30" height="20" viewBox="0 0 30 20"><circle cx="8" cy="6" r="4" fill="var(--amber)"/><rect x="0" y="15" width="30" height="4" rx="2" fill="var(--muted)"/></svg>晴天</div>
+              <div class="ex"><svg width="30" height="20" viewBox="0 0 30 20"><rect x="4" y="3" width="22" height="10" rx="2" fill="var(--muted)"/><path d="M8 16 l-2 3 M15 16 l-2 3 M22 16 l-2 3" stroke="var(--teal)" stroke-width="2" stroke-linecap="round"/></svg>雨天</div>
+              <div class="ex"><svg width="30" height="20" viewBox="0 0 30 20"><rect x="0" y="0" width="30" height="20" rx="3" fill="var(--ink)" opacity=".75"/><circle cx="22" cy="6" r="3" fill="#f5c542"/></svg>夜路</div>
+              <div class="ex"><svg width="30" height="20" viewBox="0 0 30 20"><path d="M2 17 L15 4 L28 17z" fill="var(--accent)"/></svg>施工</div>
+              <div class="ex"><svg width="30" height="20" viewBox="0 0 30 20"><rect x="0" y="13" width="30" height="4" rx="2" fill="var(--muted)"/><circle cx="10" cy="10" r="4" fill="var(--teal)"/><circle cx="21" cy="10" r="4" fill="var(--teal)"/></svg>路口</div>
+              <div class="ex"><svg width="30" height="20" viewBox="0 0 30 20"><path d="M3 16 q6 -8 12 -8 t12 8" stroke="var(--teal)" stroke-width="3" fill="none" stroke-linecap="round"/></svg>弯道</div>
+              <div class="ex dim"><svg width="30" height="20" viewBox="0 0 30 20"><path d="M6 4 l3 4 M14 3 l3 5 M22 4 l3 4 M8 12 l3 4 M17 12 l3 5" stroke="var(--ink)" stroke-width="2" stroke-linecap="round"/></svg>雪天</div>
+              <div class="ex dim"><svg width="30" height="20" viewBox="0 0 30 20"><rect x="5" y="6" width="20" height="9" rx="2" fill="var(--muted)"/><path d="M5 10 h20" stroke="var(--surface)" stroke-width="2"/></svg>异形车</div>
+            </div>
+          </div>
+        </div>
+        <p class="analogy-note reveal">学徒看得多，就学得像；可师傅没演示过的场面——几种情况<b>凑在一起</b>出现时——它仍可能判断失准。这不是它不用功，是这种学法天生带来的新问题。</p>
+
+        <div class="stack" role="group" aria-label="四层安全关系图">
+          <button class="layer l-ai open" aria-expanded="true">
+            <span class="layer-top">
+              <span class="layer-badge lb-ai">第 4 层</span>
+              <span class="layer-name">AI 安全</span>
+              <span class="layer-tag">管“学出来的判断”本身</span>
+              <span class="layer-chev">▼</span>
+            </span>
+            <span class="layer-detail">
+              数据喂得全不全、模型学得对不对、训练之后判断靠不靠谱——管的是这套“靠数据、模型和训练学出来的判断”。它的技术基础，仍然是下面一层的功能安全。
+              <br /><span class="std">对应标准：ISO/PAS 8800:2024 · 对应国标尚在制定中</span>
+            </span>
+          </button>
+          <button class="layer l-sotif" aria-expanded="false">
+            <span class="layer-top">
+              <span class="layer-badge lb-sotif">第 3 层</span>
+              <span class="layer-name">预期功能安全</span>
+              <span class="layer-tag">管“没坏，但有局限”</span>
+              <span class="layer-chev">▼</span>
+            </span>
+            <span class="layer-detail">
+              东西没坏，功能也在正常工作，只是能力有边界：大雾里看不远、逆光时认不清——没坏，也会出事，管的是这一层。
+              <br /><span class="std">ISO 21448:2022 · GB/T 43267-2023</span>
+            </span>
+          </button>
+          <button class="layer l-fusa" aria-expanded="false">
+            <span class="layer-top">
+              <span class="layer-badge lb-fusa">第 2 层</span>
+              <span class="layer-name">功能安全</span>
+              <span class="layer-tag">管“坏了”</span>
+              <span class="layer-chev">▼</span>
+            </span>
+            <span class="layer-detail">
+              芯片坏了、软件出错了——“坏了”之后怎么办：及时察觉，并进入预先定义好的安全状态，比如把控制权稳稳交还给人。
+              <br /><span class="std">ISO 26262:2018 · GB/T 34590-2022</span>
+            </span>
+          </button>
+          <button class="layer l-base" aria-expanded="false">
+            <span class="layer-top">
+              <span class="layer-badge lb-base">地基</span>
+              <span class="layer-name">机械可靠</span>
+              <span class="layer-tag">最根本的一层</span>
+              <span class="layer-chev">▼</span>
+            </span>
+            <span class="layer-detail">
+              强度够不够、疲劳寿命够不够：刹车踏板支架不能开裂，转向拉杆不能断。这一层不牢，上面的软件再聪明也托不住。
+            </span>
+          </button>
+        </div>
+        <p class="stack-base-note reveal">从下往上读：地基 → 坏了怎么办 → 没坏的局限 → 学出来的判断。越往上越新，但每一层都踩在下面一层肩上。</p>
+      </section>
+
+      <!-- 3 三个新麻烦 -->
+      <section aria-label="AI带来的三个新麻烦">
+        <div class="sec-head"><span class="sec-num">问题</span><h2>具体麻烦，出在哪三处</h2></div>
+        <div class="prob">
+
+          <div class="card reveal">
+            <div class="prob-head"><span class="prob-idx">①</span><h3>数据偏：见过的才拿手</h3></div>
+            <p>训练例子里什么样的路况、天气、车型多，它就对什么熟；见得少的，就容易拿不准。下面是训练数据构成的示意——差距就是这么来的：</p>
+            <div class="bars" id="biasBars">
+              <div class="bar-row"><span class="nm">晴天 · 高速</span><span class="bar-track"><span class="bar-fill" style="--w:94%"></span></span><span class="lv">见得多</span></div>
+              <div class="bar-row"><span class="nm">白天 · 城市路</span><span class="bar-track"><span class="bar-fill" style="--w:76%"></span></span><span class="lv">较多</span></div>
+              <div class="bar-row"><span class="nm">夜里 · 城市路</span><span class="bar-track"><span class="bar-fill" style="--w:48%"></span></span><span class="lv">一般</span></div>
+              <div class="bar-row"><span class="nm">暴雨 · 积水路</span><span class="bar-track"><span class="bar-fill" style="--w:27%"></span></span><span class="lv">较少</span></div>
+              <div class="bar-row"><span class="nm">雪天 · 山路</span><span class="bar-track"><span class="bar-fill" style="--w:13%"></span></span><span class="lv">很少</span></div>
+              <div class="bar-row hot"><span class="nm">施工改道 + 异形车</span><span class="bar-track"><span class="bar-fill" style="--w:6%"></span></span><span class="lv">罕见</span></div>
+            </div>
+          </div>
+
+          <div class="card reveal">
+            <div class="prob-head"><span class="prob-idx">②</span><h3>长尾场景：组合多到教不完</h3></div>
+            <p>现实里的组合无穷无尽，不可能每一种都提前教一遍。没见过的组合，最考验它——点一点，看看你能抽出多少种“第一次”：</p>
+            <svg class="tail-svg" viewBox="0 0 720 150" role="img" aria-label="长尾曲线示意图：少数常见场景占了大部分里程，海量罕见场景拖着长长的尾巴">
+              <path d="M20 12 C 90 14, 130 30, 190 62 C 280 108, 420 128, 700 134 L700 142 L20 142 Z" fill="var(--accent-soft)"/>
+              <path d="M20 12 C 90 14, 130 30, 190 62 C 280 108, 420 128, 700 134" fill="none" stroke="var(--accent)" stroke-width="3" stroke-linecap="round"/>
+              <circle cx="70" cy="22" r="5" fill="var(--teal)"/>
+              <circle cx="330" cy="112" r="4" fill="var(--accent)"/>
+              <circle cx="520" cy="130" r="4" fill="var(--accent)"/>
+              <circle cx="655" cy="133" r="4" fill="var(--accent)"/>
+              <text x="70" y="52" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--teal)">常见场景：教得多</text>
+              <text x="520" y="105" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--accent-ink)">长长的尾巴：罕见组合，数不清</text>
+            </svg>
+            <div class="combo">
+              <div class="combo-slots">
+                <span class="slot"><small>天气</small><span id="slotW">暴雨</span></span>
+                <span class="slot"><small>路况</small><span id="slotR">施工改道</span></span>
+                <span class="slot"><small>路上还有</small><span id="slotA">推着婴儿车的行人</span></span>
+              </div>
+              <div class="combo-foot">
+                <button class="btn" id="comboBtn">换一个组合</button>
+                <span class="combo-verdict unseen" id="comboVerdict">这个组合，训练里大概率没见过</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card reveal">
+            <div class="prob-head"><span class="prob-idx">③</span><h3>说不清，还会变</h3></div>
+            <p>它的判断不像规则手册那样一条条可查；升级换掉模型或数据，行为可能跟着变。所以版本要管住、改完要重新验证、上路之后还要一直盯着：</p>
+            <div class="versions">
+              <div class="ver">
+                <div class="v">V1.0</div>
+                <div class="chg">出厂版本</div>
+                <span class="beh">过路口：偏谨慎</span>
+              </div>
+              <div class="varrow"><span class="ota-tag">OTA</span><br />→</div>
+              <div class="ver">
+                <div class="v">V1.1</div>
+                <div class="chg">换了一批训练数据</div>
+                <span class="beh">过路口：利落了些</span>
+              </div>
+              <div class="varrow"><span class="ota-tag">OTA</span><br />→</div>
+              <div class="ver">
+                <div class="v">V2.0</div>
+                <div class="chg">换了模型</div>
+                <span class="beh">过路口：又换了种脾气</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- 4 市面上的问题 -->
+      <section aria-label="市面上的问题">
+        <div class="sec-head"><span class="sec-num">现实</span><h2>市面上的问题，长什么样</h2></div>
+        <div class="market">
+          <div class="card reveal">
+            <h3>升级完，车像换了脾气</h3>
+            <p>不少车主都有这种体验：OTA 之后，同一个辅助驾驶功能开起来感觉不一样了，可这次到底改了什么、为什么变，自己也说不清。这正是“说不清、还会变”落到日常的样子。</p>
+          </div>
+          <div class="card reveal">
+            <h3>想悄悄改？先报备</h3>
+            <p>升级能修问题，但不能拿来遮问题。监管已经明确划线：车辆有缺陷，要走召回的路，不能靠一次“优化升级”蒙混过去。</p>
+            <p class="fact">2025 年 2 月，工业和信息化部、市场监管总局发文：企业不得通过 OTA 升级掩盖车辆缺陷、规避召回；OTA 升级活动要备案，接受监管。</p>
+          </div>
+        </div>
+        <p class="aside-line reveal">顺带一句：防黑客、防入侵属于<b>信息安全</b>这条线（ISO/SAE 21434、GB 44495-2024），和本篇讲的 AI 安全是两回事，这里不展开。</p>
+      </section>
+
+      <!-- 5 带走 + 预告 -->
+      <div class="takeaway reveal">
+        <p class="k">一句话带走</p>
+        <p class="big">AI 不是越“聪明”就越安全。关键看三件事：它学的<em>东西全不全</em>、判断<em>能不能被验证</em>、变了之后<em>有没有人盯着</em>。</p>
+      </div>
+      <div class="next reveal">
+        <span class="n-badge">下篇<br />预告</span>
+        <div>
+          <h3>第 5 篇 · 智能座舱</h3>
+          <p>大屏很好玩，安全怎么算？</p>
+        </div>
+        <span class="arr">→</span>
+      </div>
+
+      <footer>
+        <span>汽车安全科普合集 · 第 4 篇 / 共 8 篇</span>
+        <span>下一篇：智能座舱</span>
+      </footer>
+    </div>
+
+    <script>
+      (function(){
+        "use strict";
+        var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+        /* ---- 钩子场景：升级前 / 升级后 ---- */
+        var card = document.getElementById("sceneCard");
+        var btnBefore = document.getElementById("btnBefore");
+        var btnAfter = document.getElementById("btnAfter");
+        var cap = document.getElementById("sceneCap");
+        var capBefore = "同一辆车、同一个人、同一条路：离斑马线还有一段距离，它就开始慢慢减速，停得稳稳当当。";
+        var capAfter = "还是这辆车、这条路：这次它冲到<b>快贴上斑马线</b>才一脚刹住。零件一件没换，路也一点没变——变的是它做判断的办法。";
+        function setScene(after){
+          card.classList.toggle("scene-after", after);
+          card.classList.toggle("scene-before", !after);
+          btnBefore.setAttribute("aria-pressed", String(!after));
+          btnAfter.setAttribute("aria-pressed", String(after));
+          cap.innerHTML = after ? capAfter : capBefore;
+        }
+        card.classList.add("scene-before");
+        btnBefore.addEventListener("click", function(){ setScene(false); });
+        btnAfter.addEventListener("click", function(){ setScene(true); });
+
+        /* ---- 层级主图：展开 / 收起 ---- */
+        var layers = document.querySelectorAll(".layer");
+        layers.forEach(function(layer){
+          layer.addEventListener("click", function(){
+            var open = layer.classList.toggle("open");
+            layer.setAttribute("aria-expanded", String(open));
+          });
+        });
+
+        /* ---- 滚动显现 + 条形图 ---- */
+        var io = new IntersectionObserver(function(entries){
+          entries.forEach(function(e){
+            if(e.isIntersecting){
+              e.target.classList.add("in");
+              io.unobserve(e.target);
+            }
+          });
+        }, {threshold:.18});
+        document.querySelectorAll(".reveal").forEach(function(el){ io.observe(el); });
+        var barsIO = new IntersectionObserver(function(entries){
+          entries.forEach(function(e){
+            if(e.isIntersecting){
+              e.target.classList.add("in");
+              barsIO.unobserve(e.target);
+            }
+          });
+        }, {threshold:.3});
+        var bars = document.getElementById("biasBars");
+        if(bars){ barsIO.observe(bars); }
+        if(reduceMotion){
+          if(bars){ bars.classList.add("in"); }
+        }
+
+        /* ---- 长尾组合抽选 ---- */
+        var weathers = ["暴雨","大雾","黄昏逆光","雪夜","晴天"];
+        var roads = ["施工改道","隧道出入口","乡村窄路","城市老路口","高速匝道"];
+        var actors = ["推着婴儿车的行人","骑电动车的外卖员","横穿马路的老人","洒落一地的纸箱","一队放学的孩子","突然窜出的小狗"];
+        var slotW = document.getElementById("slotW");
+        var slotR = document.getElementById("slotR");
+        var slotA = document.getElementById("slotA");
+        var verdict = document.getElementById("comboVerdict");
+        var seenCombos = { "晴天|城市老路口|推着婴儿车的行人": true };
+        function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+        document.getElementById("comboBtn").addEventListener("click", function(){
+          var w = pick(weathers), r = pick(roads), a = pick(actors);
+          slotW.textContent = w; slotR.textContent = r; slotA.textContent = a;
+          var seen = seenCombos[w+"|"+r+"|"+a] || (w==="晴天" && Math.random()<0.25);
+          if(seen){
+            verdict.textContent = "这个组合，训练里见过不少";
+            verdict.className = "combo-verdict seen";
+          } else {
+            verdict.textContent = "这个组合，训练里大概率没见过";
+            verdict.className = "combo-verdict unseen";
+          }
+        });
+      })();
+    </script>
+  </body>
+</html>
