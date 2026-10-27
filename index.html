@@ -189,17 +189,17 @@
 
   /* ---------- 联系 ---------- */
   .contact{
-    text-align:center;padding:52px 30px;border-radius:var(--radius);
+    display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:nowrap;white-space:nowrap;padding:20px 22px;border-radius:var(--radius);
     background:linear-gradient(180deg,rgba(34,211,238,.08),rgba(13,26,51,.35));
     border:1px solid var(--panel-border);
   }
-  .contact h2{font-size:clamp(24px,4vw,32px);margin-bottom:10px}
-  .contact p{color:var(--muted);max-width:600px;margin:0 auto 20px}
-  .contact .mail{font-size:clamp(17px,3.4vw,21px);font-weight:700;letter-spacing:.03em}
+  .contact h2{font-size:18px;margin:0;white-space:nowrap}
+  .contact p{color:var(--muted);max-width:none;margin:0;white-space:nowrap;font-size:14px}
+  .contact .mail{font-size:14px;font-weight:700;letter-spacing:.02em;white-space:nowrap}
 
   /* ---------- 页脚 ---------- */
   footer.site{border-top:1px solid rgba(56,189,248,.12);padding:32px 0 42px;color:var(--muted);font-size:13.5px}
-  .foot{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  .foot{display:flex;justify-content:center;gap:0;flex-wrap:nowrap;white-space:nowrap;text-align:center}
   footer.site a{color:var(--muted)}
   footer.site a:hover{color:var(--cyan)}
 
@@ -218,7 +218,7 @@
       <li><a href="#expertise">专业领域</a></li>
       <li><a href="#education">教育与语言</a></li>
       <li><a href="#works">作品</a></li>
-      <li><a href="#follow">扫码关注</a></li>
+      
       <li><a href="#contact">联系</a></li>
     </ul>
   </div>
@@ -231,7 +231,7 @@
     <span class="kicker">FUNCTIONAL SAFETY MANAGER</span>
     <h1>许路<br><span class="grad">让每一代车，都更安全。</span></h1>
     <p class="role">功能安全部门经理<span>·</span>汽车功能安全<span>/</span>预期功能安全（SOTIF）<span>/</span>AI 安全</p>
-    <p class="sub">现居江西南昌。从物理件断裂到 AI 学偏，车“坏”的方式变了四次——我做的事情，是让每一次“坏”都被提前想到、被安全地处理。</p>
+    <p class="sub">从物理件断裂到 AI 学偏，车“坏”的方式变了四次——我做的事情，是让每一次“坏”都被提前想到、被安全地处理。</p>
     <div class="status"><span class="dot"></span>汽车功能安全从业者 · 《汽车安全科普》连载中</div>
     <div class="cta">
       <a class="btn primary" href="#experience">看我的经历</a>
@@ -246,7 +246,7 @@
       <h2>关于我</h2>
     </div>
     <div class="about-card">
-      我是<strong>许路</strong>，汽车功能安全部门经理。多年跨<strong>防务、铁路、汽车</strong>领域的嵌入式与安全关键系统经验，熟悉基于模型的系统工程（<strong>MBSE</strong>）；擅长<strong>功能安全、预期功能安全、AI安全从零到落地量产</strong>——曾从零筹建整车企业的功能安全团队、能力与管理体系。工作之余，我把三大安全标准做成面向普通车主的《汽车安全科普》系列。
+      我是<strong>许路</strong>，汽车功能安全部门经理。多年跨<strong>防务、铁路、汽车</strong>领域的嵌入式与安全关键系统经验，熟悉基于模型的系统工程（<strong>MBSE</strong>）；擅长<strong>功能安全、预期功能安全、AI安全从零到落地量产</strong>——曾从零筹建整车企业的功能安全团队、能力与管理体系，实现国内外市场安全合规量产准入和高阶自动驾驶高安全冗余概念落地。工作之余，我把三大安全标准做成面向普通车主的《汽车安全科普》系列。
     </div>
   </section>
 
@@ -262,9 +262,9 @@
         <div class="when">2022.10 – 2026.10</div>
         <h3>江铃汽车股份有限公司 <span class="dept">· 智能网联院 / 功能安全部门经理</span></h3>
         <ul>
-          <li>从零筹建功能安全团队、能力与管理体系，获 TÜV 莱茵及 SGS 功能安全和预期功能安全管理体系证书</li>
+          <li>从零筹建功能安全团队、能力与管理体系，获 TÜV 莱茵及 SGS 功能安全和预期功能安全管理体系证书，AI 安全管理体系证书即将获证</li>
           <li>主导整车电子电气架构平台 iDEA3.0 的功能安全需求平台基线，基于模型的功能安全分析与设计（Medini Analyze）</li>
-          <li>主导多个项目功能安全合规开发（含欧盟市场）；建立自主的实车功能安全故障注入验证确认能力</li>
+          <li>主导多个项目功能安全合规开发（含欧盟市场）；建立自主的实车和 E/E 台架功能安全故障注入验证确认能力</li>
           <li>主导多个高阶自动驾驶项目（高阶辅助驾驶、L3有条件自动驾驶乘用车、L4无人物流车）功能安全概念开发设计，高安全多冗余整车架构设计，并推动落地</li>
         </ul>
       </div>
@@ -394,7 +394,7 @@
           <div class="d">大屏很好玩，安全怎么算：分心、误触、语音误唤醒和驾驶员监控，座舱的安全横跨功能安全和预期功能安全两条线。</div>
         </div>
         <span class="status"><a href="汽车安全科普 · 第5篇 智能座舱.html">已上线</a></span>
-        <div class="ep">
+        </div><div class="ep">
           <span class="idx">第 6–8 篇</span>
           <div>
             <div class="t">电动化 · 案例拆解 · 消费者行动清单</div>
@@ -402,44 +402,44 @@
           </div>
           <span class="status soon">连载中</span>
         </div>
-      </div>
+      
                 </div>
       <p class="channels">在 <b>公众号「欣和路」</b>、<b>抖音「欣和路」</b>、<b>B站「欣和路」</b> 同步更新（搜索账号名即可找到，扫码关注见下方）。</p>
     </div>
   </section>
 
 
-  <!-- 扫码关注 -->
-  <section id="follow" class="reveal">
+  
+  <section id="contact" class="reveal">
     <div class="sec-head">
-      <div class="no">06 — FOLLOW</div>
-      <h2>扫码关注</h2>
-      <p>三个平台同名「欣和路」，图文与视频同步更新。点图可放大原图扫码。</p>
+      
+      
+      
     </div>
     <div class="qr-grid">
       <div class="qr-card">
         <a href="assets/qr-wechat.jpg"><img class="qr-img" src="assets/qr-wechat.jpg" alt="微信公众号「欣和路」二维码"></a>
-        <h3>微信公众号</h3>
-        <div class="acct">欣和路</div>
+        <h3>微信公众号</h3><div class="acct">欣和路</div>
+        
         <div class="hint">扫码关注公众号</div>
       </div>
       <div class="qr-card">
         <a href="assets/qr-douyin.jpg"><img class="qr-img" src="assets/qr-douyin.jpg" alt="抖音「欣和路」二维码"></a>
-        <h3>抖音</h3>
-        <div class="acct">@欣和路</div>
-        <div class="hint">抖音号 86195552712 · 扫码关注</div>
+        
+        
+        
       </div>
       <div class="qr-card">
         <a href="assets/qr-bilibili.jpg"><img class="qr-img" src="assets/qr-bilibili.jpg" alt="B站「欣和路」二维码"></a>
-        <h3>B站</h3>
-        <div class="acct">欣和路</div>
-        <div class="hint">UID 397682143 · 扫码关注</div>
+        
+        
+        
       </div>
     </div>
-  </section>
+  
 
   <!-- 联系 -->
-  <section id="contact" class="reveal">
+  
     <div class="contact">
       <h2>联系我</h2>
       <p>专注领域：功能安全 / 预期功能安全（SOTIF）/ AI 安全。欢迎就汽车安全交流联系。</p>
@@ -451,8 +451,8 @@
 
 <footer class="site">
   <div class="wrap foot">
-    <div>© 2026 许路 · 汽车安全科普</div>
-    <div><a href="https://qingshihuangdi.github.io">GitHub</a></div>
+    <div>© 2026 许路 · 让每一代车，都更安全 · 《汽车安全科普》连载中</div>
+    
   </div>
 </footer>
 
