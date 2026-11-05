@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>许路 · 智能系统安全专家</title>
+<meta name="description" content="许路 Xu Lu — 智能系统安全专家，实践主线为汽车功能安全（ISO 26262）、预期功能安全 SOTIF（ISO 21448）与 AI 安全（ISO/PAS 8800）：安全需求、系统架构、工程流程与验证闭环。">
+<style>
+  :root{
+    --bg:#060b18;
+    --panel:#0d1a33;
+    --panel-border:rgba(56,189,248,.16);
+    --ink:#e6eef8;
+    --muted:#93a7c4;
+    --cyan:#22d3ee;
+    --teal:#2dd4bf;
+    --grad:linear-gradient(92deg,#38bdf8 0%,#22d3ee 55%,#2dd4bf 100%);
+    --radius:16px;
+    --maxw:1080px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans CJK SC",system-ui,-apple-system,"Segoe UI",sans-serif;
+    background:
+      radial-gradient(900px 480px at 85% -10%,rgba(34,211,238,.14),transparent 60%),
+      radial-gradient(700px 420px at -10% 30%,rgba(56,189,248,.10),transparent 60%),
+      var(--bg);
+    color:var(--ink);
+    line-height:1.75;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--cyan);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 22px}
+
+  /* ---------- 导航 ---------- */
+  header.site{
+    position:sticky;top:0;z-index:50;
+    backdrop-filter:blur(10px);
+    background:rgba(6,11,24,.78);
+    border-bottom:1px solid rgba(56,189,248,.12);
+  }
+  .nav{display:flex;align-items:center;justify-content:space-between;height:60px}
+  .brand{font-weight:700;letter-spacing:.14em;font-size:15px;color:var(--ink)}
+  .brand em{font-style:normal;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .nav ul{display:flex;gap:24px;list-style:none}
+  .nav ul a{color:var(--muted);font-size:14px}
+  .nav ul a:hover{color:var(--cyan);text-decoration:none}
+  @media (max-width:760px){.nav ul{display:none}}
+
+  /* ---------- 头图 ---------- */
+  .hero{padding:104px 0 84px}
+  .hero .kicker{
+    display:inline-block;font-size:13px;letter-spacing:.28em;color:var(--cyan);
+    border:1px solid rgba(34,211,238,.35);border-radius:999px;padding:5px 14px;margin-bottom:26px;
+    background:rgba(34,211,238,.06);
+  }
+  .hero h1{font-size:clamp(44px,8vw,72px);line-height:1.15;font-weight:800;letter-spacing:.02em}
+  .hero h1 .grad{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .hero .role{margin-top:20px;font-size:clamp(18px,3vw,23px);font-weight:600;letter-spacing:.04em}
+  .hero .role span{color:var(--muted);font-weight:400;margin:0 .3em}
+  .hero .tags{margin-top:16px;display:flex;gap:10px;flex-wrap:wrap}
+  .hero .tags span{
+    font-size:12.5px;letter-spacing:.16em;color:var(--cyan);font-weight:600;
+    border:1px solid rgba(34,211,238,.35);border-radius:6px;padding:3px 12px;background:rgba(34,211,238,.05);
+  }
+  .hero .sub{margin-top:16px;max-width:680px;color:var(--muted);font-size:16px}
+  .hero .status{
+    margin-top:26px;display:inline-flex;align-items:center;gap:9px;font-size:14.5px;color:var(--ink);
+    border:1px solid rgba(45,212,191,.4);background:rgba(45,212,191,.07);
+    border-radius:999px;padding:7px 16px;
+  }
+  .hero .status .dot{width:8px;height:8px;border-radius:50%;background:var(--teal);box-shadow:0 0 10px var(--teal)}
+  .hero .cta{margin-top:32px;display:flex;gap:14px;flex-wrap:wrap}
+  .btn{
+    display:inline-block;padding:11px 26px;border-radius:999px;font-size:15px;font-weight:600;
+    border:1px solid rgba(34,211,238,.45);color:var(--cyan);background:rgba(34,211,238,.05);
+    transition:all .2s ease;
+  }
+  .btn:hover{text-decoration:none;background:rgba(34,211,238,.14);transform:translateY(-1px)}
+  .btn.primary{background:var(--grad);color:#04222b;border:none}
+  .btn.primary:hover{opacity:.92}
+
+  /* ---------- 通用区块 ---------- */
+  section{padding:60px 0}
+  .sec-head{margin-bottom:32px}
+  .sec-head .no{font-size:13px;letter-spacing:.3em;color:var(--cyan)}
+  .sec-head h2{font-size:clamp(26px,4.5vw,34px);font-weight:700;margin-top:6px}
+  .sec-head p{color:var(--muted);margin-top:8px;max-width:680px}
+
+  .about-card{
+    background:var(--panel);border:1px solid var(--panel-border);border-radius:var(--radius);
+    padding:32px 34px;font-size:16.5px;color:#c9d8ee;
+  }
+  .about-card strong{color:var(--ink)}
+  .about-card .credo{
+    margin-top:18px;padding-top:18px;border-top:1px dashed rgba(147,167,196,.25);
+    font-size:17px;color:var(--ink);font-weight:600;
+  }
+  .layers{margin-top:22px;display:grid;gap:12px}
+  .layer{
+    display:flex;gap:16px;align-items:baseline;background:rgba(34,211,238,.04);
+    border:1px solid rgba(56,189,248,.12);border-radius:12px;padding:14px 20px;
+  }
+  .layer .lk{flex:0 0 auto;font-size:12.5px;letter-spacing:.14em;color:#04222b;font-weight:700;background:var(--grad);border-radius:6px;padding:2px 10px}
+  .layer .lv{font-weight:600;color:var(--ink)}
+  .layer .ld{color:var(--muted);font-size:14.5px}
+
+  /* ---------- 时间轴 ---------- */
+  .timeline{position:relative;margin-left:8px;padding-left:34px}
+  .timeline::before{
+    content:"";position:absolute;left:6px;top:8px;bottom:8px;width:2px;
+    background:linear-gradient(180deg,var(--cyan),rgba(34,211,238,.08));
+  }
+  .job{position:relative;padding:0 0 38px}
+  .job:last-child{padding-bottom:4px}
+  .job::before{
+    content:"";position:absolute;left:-34px;top:9px;width:14px;height:14px;border-radius:50%;
+    background:var(--bg);border:3px solid var(--cyan);
+    transform:translateX(-1px);
+  }
+  .job .when{color:var(--cyan);font-size:13.5px;letter-spacing:.1em;font-weight:600}
+  .job h3{font-size:20px;margin:4px 0 2px}
+  .job h3 .dept{color:var(--muted);font-weight:400;font-size:16px}
+  .job ul{margin:10px 0 0 18px;color:var(--muted);font-size:15px}
+  .job ul li{margin:5px 0}
+  .job ul li::marker{color:var(--cyan)}
+
+  /* ---------- 专业领域卡片 ---------- */
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  @media (max-width:860px){.cards{grid-template-columns:1fr}}
+  .card{
+    background:linear-gradient(180deg,rgba(56,189,248,.06),rgba(13,26,51,.4)),var(--panel);
+    border:1px solid var(--panel-border);border-radius:var(--radius);
+    padding:28px 26px;transition:transform .2s ease,border-color .2s ease;
+  }
+  .card:hover{transform:translateY(-4px);border-color:rgba(34,211,238,.45)}
+  .card .tag{
+    display:inline-block;font-size:12px;letter-spacing:.18em;color:#04222b;font-weight:700;
+    background:var(--grad);border-radius:6px;padding:3px 10px;margin-bottom:16px;
+  }
+  .card h3{font-size:20px;margin-bottom:6px}
+  .card .std{color:var(--cyan);font-size:14px;letter-spacing:.04em;margin-bottom:12px}
+  .card p{color:var(--muted);font-size:14.5px}
+  .card ul{margin:12px 0 0 18px;color:var(--muted);font-size:14.5px}
+  .card ul li{margin:4px 0}
+  .card ul li::marker{color:var(--cyan)}
+  .card .note{margin-top:14px;padding-top:12px;border-top:1px dashed rgba(147,167,196,.25);font-size:13.5px;color:#c9d8ee}
+
+  /* ---------- 代表实践 ---------- */
+  .case{
+    background:var(--panel);border:1px solid var(--panel-border);border-radius:var(--radius);
+    padding:30px 32px;margin-bottom:20px;position:relative;overflow:hidden;
+  }
+  .case::before{content:"";position:absolute;inset:0 auto 0 0;width:3px;background:var(--grad)}
+  .case h3{font-size:20.5px;margin-bottom:16px}
+  .case h3 .en{color:var(--muted);font-weight:400;font-size:14px;letter-spacing:.06em;margin-left:10px}
+  .case .row{display:flex;gap:14px;margin:8px 0;align-items:baseline}
+  .case .row .k{flex:0 0 74px;font-size:13px;font-weight:700;color:var(--cyan);letter-spacing:.08em}
+  .case .row .v{color:var(--muted);font-size:15px}
+  .case .row .v strong{color:#c9d8ee;font-weight:600}
+  @media (max-width:640px){.case .row{flex-direction:column;gap:2px}.case .row .k{flex:0 0 auto}.case h3 .en{display:block;margin:8px 0 0}}
+
+  /* ---------- 方法论 ---------- */
+  .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+  @media (max-width:960px){.steps{grid-template-columns:repeat(2,1fr)}}
+  @media (max-width:560px){.steps{grid-template-columns:1fr}}
+  .step{
+    background:linear-gradient(180deg,rgba(56,189,248,.06),rgba(13,26,51,.4)),var(--panel);
+    border:1px solid var(--panel-border);border-radius:var(--radius);padding:26px 24px;
+  }
+  .step .n{font-size:13px;letter-spacing:.2em;color:var(--cyan);font-weight:700}
+  .step h3{font-size:19px;margin:8px 0 6px}
+  .step p{color:var(--muted);font-size:14.5px}
+
+  /* ---------- 教育与语言 ---------- */
+  .edu-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  @media (max-width:760px){.edu-grid{grid-template-columns:1fr}}
+  .edu{
+    background:var(--panel);border:1px solid var(--panel-border);border-radius:var(--radius);padding:26px 28px;
+  }
+  .edu .when{color:var(--cyan);font-size:13.5px;letter-spacing:.08em;font-weight:600}
+  .edu h3{font-size:18.5px;margin:5px 0 3px}
+  .edu p{color:var(--muted);font-size:14.5px}
+  .langs{display:flex;gap:14px;flex-wrap:wrap;margin-top:20px}
+  .lang{
+    flex:1 1 200px;background:var(--panel);border:1px solid var(--panel-border);border-radius:12px;
+    padding:16px 20px;font-size:15px;
+  }
+  .lang b{display:block;font-size:16.5px}
+  .lang span{color:var(--muted);font-size:13.5px}
+
+  /* ---------- 作品 ---------- */
+  .work{
+    background:var(--panel);border:1px solid var(--panel-border);border-radius:var(--radius);
+    padding:34px;overflow:hidden;position:relative;
+  }
+  .work::before{content:"";position:absolute;inset:0 0 auto 0;height:3px;background:var(--grad)}
+  .work h3{font-size:24px;margin-bottom:8px}
+  .work .meta{color:var(--cyan);font-size:14px;letter-spacing:.05em;margin-bottom:14px}
+  .work p{color:var(--muted);max-width:720px}
+  .episodes{margin-top:22px;border-top:1px dashed rgba(147,167,196,.25);padding-top:18px}
+  .ep{display:flex;gap:16px;align-items:baseline;padding:10px 0;border-bottom:1px solid rgba(147,167,196,.08)}
+  .ep:last-child{border-bottom:none}
+  .ep .idx{
+    flex:0 0 auto;font-weight:800;color:#04222b;background:var(--grad);
+    border-radius:8px;padding:1px 10px;font-size:13px;letter-spacing:.08em;
+  }
+  .ep .t{font-weight:600}
+  .ep .d{color:var(--muted);font-size:14px}
+  .status{
+    margin-left:auto;flex:0 0 auto;font-size:12.5px;color:var(--teal);
+    border:1px solid rgba(45,212,191,.4);border-radius:999px;padding:2px 10px;
+  }
+  .status.soon{color:var(--muted);border-color:rgba(147,167,196,.35)}
+  .channels{margin-top:20px;color:var(--muted);font-size:14.5px}
+  .channels b{color:var(--ink);font-weight:600}
+
+  /* ---------- 扫码关注 ---------- */
+  .qr-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:8px}
+  @media (max-width:860px){.qr-grid{grid-template-columns:1fr}}
+  .qr-card{
+    background:var(--panel);border:1px solid var(--panel-border);border-radius:var(--radius);
+    padding:22px 20px 20px;text-align:center;transition:transform .2s ease,border-color .2s ease;
+  }
+  .qr-card:hover{transform:translateY(-4px);border-color:rgba(34,211,238,.45)}
+  .qr-card .qr-img{
+    display:block;width:100%;height:260px;object-fit:contain;background:#fff;
+    border-radius:12px;padding:8px;margin-bottom:16px;
+  }
+  .qr-card h3{font-size:19px;margin-bottom:4px}
+  .qr-card .acct{color:var(--cyan);font-size:14.5px;font-weight:600;margin-bottom:6px}
+  .qr-card .hint{color:var(--muted);font-size:13.5px}
+  .qr-card:nth-child(2) .qr-img,.qr-card:nth-child(3) .qr-img{height:368.25px;margin-bottom:0}
+
+  /* ---------- 联系 ---------- */
+  .contact{
+    display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:nowrap;white-space:nowrap;padding:20px 22px;border-radius:var(--radius);
+    background:linear-gradient(180deg,rgba(34,211,238,.08),rgba(13,26,51,.35));
+    border:1px solid var(--panel-border);
+  }
+  .contact h2{font-size:18px;margin:0;white-space:nowrap}
+  .contact p{color:var(--muted);max-width:none;margin:0;white-space:nowrap;font-size:14px}
+  .contact .mail{font-size:14px;font-weight:700;letter-spacing:.02em;white-space:nowrap}
+  @media (max-width:860px){.contact{flex-wrap:wrap;white-space:normal;text-align:center}.contact p{white-space:normal}}
+
+  /* ---------- 页脚 ---------- */
+  footer.site{border-top:1px solid rgba(56,189,248,.12);padding:32px 0 42px;color:var(--muted);font-size:13.5px}
+  .foot{display:flex;justify-content:center;gap:0;flex-wrap:nowrap;white-space:nowrap;text-align:center}
+  footer.site a{color:var(--muted)}
+  footer.site a:hover{color:var(--cyan)}
+
+  /* ---------- 小屏适配 ---------- */
+  @media (max-width:640px){
+    .hero{padding:76px 0 64px}
+    .hero h1{font-size:37px;line-height:1.28}
+    .hero .kicker{letter-spacing:.18em}
+    section{padding:48px 0}
+    .about-card,.work{padding:26px 22px}
+    .case{padding:26px 22px}
+    .ep{flex-wrap:wrap;gap:8px 12px;padding:14px 0}
+    .ep>div{order:3;flex:1 1 100%}
+    .ep .status{order:2;margin-left:auto}
+    .foot{flex-wrap:wrap;white-space:normal;line-height:1.65}
+  }
+
+  .reveal{opacity:0;transform:translateY(14px);transition:opacity .6s ease,transform .6s ease}
+  .reveal.in{opacity:1;transform:none}
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap nav">
+    <div class="brand">许路 <em>/ XU LU</em></div>
+    <ul>
+      <li><a href="#about">关于我</a></li>
+      <li><a href="#expertise">专业方向</a></li>
+      <li><a href="#practice">代表实践</a></li>
+      <li><a href="#experience">职业经历</a></li>
+      <li><a href="#works">专业文章</a></li>
+      <li><a href="#contact">联系</a></li>
+      <li><a href="en.html">EN</a></li>
+    </ul>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- 头图 -->
+  <div class="hero">
+    <span class="kicker">INTELLIGENT SYSTEMS SAFETY EXPERT</span>
+    <h1>许路<br><span class="grad">让智能系统，安全地运行。</span></h1>
+    <p class="role">智能系统安全专家<span>·</span>当前主线：智能汽车安全</p>
+    <div class="tags"><span>FUNCTIONAL SAFETY</span><span>SOTIF</span><span>AI SAFETY</span></div>
+    <p class="sub">从安全需求到系统架构，从工程流程到验证闭环，推动安全能力真正融入智能系统的开发与运行。实践基础在智能汽车——功能安全、预期功能安全与智能驾驶安全；能力边界正延伸至 AI 驱动系统与更广泛的安全关键智能系统。</p>
+    <div class="status"><span class="dot"></span>汽车功能安全从业者 · 《汽车安全科普》全 9 篇已完结</div>
+    <div class="cta">
+      <a class="btn primary" href="#practice">看代表实践</a>
+      <a class="btn" href="#contact">联系我</a>
+    </div>
+  </div>
+
+  <!-- 关于我 -->
+  <section id="about" class="reveal">
+    <div class="sec-head">
+      <div class="no">01 — ABOUT</div>
+      <h2>关于我</h2>
+    </div>
+    <div class="about-card">
+      我是<strong>许路</strong>，多年跨<strong>防务、铁路、汽车</strong>领域的安全关键系统经验，熟悉基于模型的系统工程（<strong>MBSE</strong>）。在整车企业从零筹建功能安全团队、能力与管理体系，主导整车电子电气架构平台的安全需求基线与高阶智能驾驶安全概念落地，实现国内外市场安全合规量产准入，并建立实车与台架故障注入验证能力。
+      <div class="credo">安全不是开发流程之外的一道检查，而是系统设计与工程决策的一部分。</div>
+      <div class="layers">
+        <div class="layer"><span class="lk">当前主线</span><div><span class="lv">智能汽车安全</span> <span class="ld">——功能安全、SOTIF、智能驾驶安全</span></div></div>
+        <div class="layer"><span class="lk">能力延伸</span><div><span class="lv">AI Safety</span> <span class="ld">——AI 驱动系统的安全约束、系统集成与工程治理</span></div></div>
+        <div class="layer"><span class="lk">长期方向</span><div><span class="lv">智能系统安全</span> <span class="ld">——机器人、无人系统、具身智能等安全关键系统</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 专业方向 -->
+  <section id="expertise" class="reveal">
+    <div class="sec-head">
+      <div class="no">02 — EXPERTISE</div>
+      <h2>专业方向</h2>
+      <p>三个标准管三件不同的事：功能失效、功能不足、以及从数据里学出来的判断。在统一的安全开发框架下协同，而不是混为一谈。</p>
+    </div>
+    <div class="cards">
+      <div class="card">
+        <span class="tag">FUNCTIONAL SAFETY</span>
+        <h3>功能安全</h3>
+        <div class="std">ISO 26262:2018 · GB/T 34590-2022</div>
+        <p>管随机硬件失效与系统性失效：坏得看不见，也要被检测到，并进入预先定义的安全状态。</p>
+        <ul>
+          <li>安全需求分解与 ASIL 分配</li>
+          <li>系统安全架构与安全机制</li>
+          <li>安全开发流程与验证确认</li>
+        </ul>
+      </div>
+      <div class="card">
+        <span class="tag">SOTIF</span>
+        <h3>预期功能安全</h3>
+        <div class="std">ISO 21448:2022 · GB/T 43267-2023</div>
+        <p>管功能本身的不足：零部件一个没坏，感知与决策却可能在特定场景下不够用。</p>
+        <ul>
+          <li>功能不足与触发条件分析</li>
+          <li>ODD 与场景化风险分析</li>
+          <li>合理可预见误用分析</li>
+        </ul>
+      </div>
+      <div class="card">
+        <span class="tag">AI SAFETY</span>
+        <h3>AI 安全</h3>
+        <div class="std">ISO/PAS 8800:2024</div>
+        <p>管从数据里学出来的判断：没见过的场景不会、学偏了还会自信地犯错。</p>
+        <ul>
+          <li>AI 能力与局限分析</li>
+          <li>系统级安全约束与集成安全</li>
+          <li>数据、模型与训练全过程的工程治理</li>
+        </ul>
+        <div class="note">视角说明：从系统安全出发审视 AI——判断它会在哪里失效、怎样被约束，而不是从事 AI 算法研发。</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 代表实践 -->
+  <section id="practice" class="reveal">
+    <div class="sec-head">
+      <div class="no">03 — SELECTED PRACTICE</div>
+      <h2>代表实践</h2>
+      <p>四项实践分别覆盖平台安全架构、高阶智能驾驶、安全验证能力，以及团队与管理体系建设。</p>
+    </div>
+
+    <div class="case">
+      <h3>整车 E/E 平台安全架构<span class="en">PLATFORM SAFETY ARCHITECTURE</span></h3>
+      <div class="row"><span class="k">背景</span><span class="v">整车电子电气架构平台化，多个车型项目共用同一平台开发。</span></div>
+      <div class="row"><span class="k">安全问题</span><span class="v">各项目若各自做安全，需求口径不一、架构决策冲突，平台级失效模式无人统筹。</span></div>
+      <div class="row"><span class="k">技术方案</span><span class="v">主导平台的<strong>功能安全与 SOTIF 需求基线</strong>和顶层安全架构基础设计，推动安全要求与整车 E/E 架构协同设计，以基于模型的分析（Medini Analyze）支撑需求分解与追溯。</span></div>
+      <div class="row"><span class="k">工程成果</span><span class="v">形成可供多项目复用的平台安全基线，安全要求在架构阶段即被纳入，而不是开发后期补做。</span></div>
+    </div>
+
+    <div class="case">
+      <h3>L2+ / L3 / L4 智能驾驶安全<span class="en">AUTOMATED DRIVING SAFETY</span></h3>
+      <div class="row"><span class="k">背景</span><span class="v">高阶辅助驾驶、L3 有条件自动驾驶乘用车与 L4 无人物流车多个项目并行开发。</span></div>
+      <div class="row"><span class="k">安全问题</span><span class="v">驾驶责任逐步从人转向系统：故障时要么保持功能、要么安全退出；ODD 边界外与触发条件下的行为必须预先定义。</span></div>
+      <div class="row"><span class="k">技术方案</span><span class="v">主导各项目功能安全概念设计与 SOTIF 分析，建立<strong>分布式、高安全多冗余的整车架构</strong>，覆盖传感器、域控制器与执行器的全栈故障降级策略，区分 Fail-Safe 与 Fail-Operational 的适用场景。</span></div>
+      <div class="row"><span class="k">工程成果</span><span class="v">多个高阶智能驾驶项目的安全概念落地，为量产合规准入提供安全侧输入。</span></div>
+    </div>
+
+    <div class="case">
+      <h3>安全开发与验证能力建设<span class="en">VERIFICATION CAPABILITY</span></h3>
+      <div class="row"><span class="k">背景</span><span class="v">安全分析做得再完整，没有验证手段，结论也只是纸面成立。</span></div>
+      <div class="row"><span class="k">安全问题</span><span class="v">安全机制是否真的在故障注入下按设计动作，需要实物层面的证据，而不是评审签字。</span></div>
+      <div class="row"><span class="k">技术方案</span><span class="v">建立自主的<strong>实车与 E/E 台架功能安全故障注入</strong>验证确认能力，把安全需求、分析、设计与验证连成闭环。</span></div>
+      <div class="row"><span class="k">工程成果</span><span class="v">故障注入成为可重复执行的工程能力，安全机制的有效性有实测证据支撑。</span></div>
+    </div>
+
+    <div class="case">
+      <h3>安全团队与管理体系建设<span class="en">TEAM &amp; MANAGEMENT SYSTEM</span></h3>
+      <div class="row"><span class="k">背景</span><span class="v">入职时企业尚无专职功能安全团队与体系，相关工作分散在各开发部门。</span></div>
+      <div class="row"><span class="k">安全问题</span><span class="v">没有组织、流程与评审机制，安全活动依赖个人经验，无法支撑多项目并行与外部审核。</span></div>
+      <div class="row"><span class="k">技术方案</span><span class="v">从 0 到 1 筹建安全团队并建立安全技术矩阵，推动功能安全与 SOTIF 开发活动协同，建立工作产品规范、评审机制与审核整改闭环。</span></div>
+      <div class="row"><span class="k">工程成果</span><span class="v">功能安全管理体系获 <strong>TÜV 莱茵（ISO 26262）</strong>认证、预期功能安全管理体系获 <strong>SGS（ISO 21448）</strong>认证，多个项目实现国内外市场安全合规量产准入。</span></div>
+    </div>
+
+    <div class="case">
+      <h3>相关专利<span class="en">PATENTS</span></h3>
+      <div class="row"><span class="k">第一位</span><span class="v"><strong>面向预期功能安全的抗干扰视觉跟踪系统、方法及智能驾驶系统</strong> · CN123016009A · 发明专利申请（已公布）· 申请人：江铃汽车股份有限公司、优策（江苏）安全科技有限公司</span></div>
+      <div class="row"><span class="k">第二位</span><span class="v"><strong>一种实现自动驾驶等级多样功能安全要求的控制冗余方法</strong> · CN122710502A · 发明专利申请（已公布，已进入实质审查）· 申请人：江铃汽车股份有限公司</span></div>
+      <div class="row"><span class="k">第二位</span><span class="v"><strong>面向预期功能安全的视觉提示生成方法、图像识别方法、装置及系统</strong> · CN122990415A · 发明专利申请（已公布）· 申请人：江铃汽车股份有限公司、优策（江苏）安全科技有限公司</span></div>
+      <div class="row"><span class="k">第三位</span><span class="v"><strong>一种故障安全注入测试工具</strong> · CN224456900U · 实用新型专利（已授权）· 申请人：江铃汽车股份有限公司</span></div>
+      <div class="row"><span class="k">第六位</span><span class="v"><strong>一种中央集成式电子电气架构的预期功能安全验证系统及方法</strong> · CN122710750A · 发明专利申请（已公布，已进入实质审查）· 申请人：江铃汽车股份有限公司、南昌智能新能源汽车研究院</span></div>
+      <div class="row"><span class="k">第六位</span><span class="v"><strong>一种驾驶员误用缓解措施有效性评估方法及设备</strong> · CN122886125A · 发明专利申请（已公布）· 申请人：江铃汽车股份有限公司、南昌智能新能源汽车研究院</span></div>
+    </div>
+  </section>
+
+  <!-- 职业经历 -->
+  <section id="experience" class="reveal">
+    <div class="sec-head">
+      <div class="no">04 — EXPERIENCE</div>
+      <h2>职业经历</h2>
+    </div>
+    <div class="timeline">
+
+      <div class="job">
+        <div class="when">2022.10 – 2026.10</div>
+        <h3>江铃汽车股份有限公司 <span class="dept">· 智能网联院 / 功能安全部门经理</span></h3>
+        <ul>
+          <li>从零筹建功能安全团队、能力与管理体系：功能安全管理体系获 TÜV 莱茵认证、预期功能安全管理体系获 SGS 认证，AI 安全管理体系认证同由 TÜV 莱茵实施、证书待发</li>
+          <li>主导整车电子电气架构平台的功能安全需求平台基线，基于模型的功能安全分析与设计（Medini Analyze）</li>
+          <li>主导多个项目功能安全合规开发（含欧盟市场）；建立自主的实车和 E/E 台架功能安全故障注入验证确认能力</li>
+          <li>主导多个高阶自动驾驶项目（高阶辅助驾驶、L3 有条件自动驾驶乘用车、L4 无人物流车）功能安全概念开发设计，高安全多冗余整车架构设计，并推动落地</li>
+        </ul>
+      </div>
+
+      <div class="job">
+        <div class="when">2020.10 – 2022.10</div>
+        <h3>上海电气泰雷兹交通自动化系统有限公司 <span class="dept">· 技术中心 / 系统设计工程师</span></h3>
+        <ul>
+          <li>轨道交通 CBTC 信号系统设计：ATP（SIL4）、ATO（SIL2）、ATS（SIL0），覆盖车载、轨旁、控制室、正线、场站</li>
+          <li>安全关键系统需求形式化建模与验证（Stimulus、Arcadia/Capella、Simulink/Stateflow、Event-B）</li>
+        </ul>
+      </div>
+
+      <div class="job">
+        <div class="when">2019.06 – 2020.10</div>
+        <h3>中国电子科技集团第三十二研究所 <span class="dept">· 基础软件部 / 软件工程师</span></h3>
+        <ul>
+          <li>高安全高可靠实时操作系统中间件开发；熟悉 EtherCAT、VxWorks、i.MX6</li>
+          <li>智能化控制系统开发：AI 视觉引导 AGV + 工业机器人六轴控制与分拣</li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 工作方法 -->
+  <section id="approach" class="reveal">
+    <div class="sec-head">
+      <div class="no">05 — APPROACH</div>
+      <h2>工作方法</h2>
+      <p>熟悉标准只是起点。真正的工作，是把标准要求翻译成架构、流程和可验证的工程证据。</p>
+    </div>
+    <div class="steps">
+      <div class="step"><div class="n">STEP 1 · UNDERSTAND</div><h3>理解</h3><p>理解标准要求、产品功能、运行场景与系统边界——先把问题定义对。</p></div>
+      <div class="step"><div class="n">STEP 2 · ARCHITECT</div><h3>架构</h3><p>建立安全概念，完成需求分解、系统架构与安全机制设计。</p></div>
+      <div class="step"><div class="n">STEP 3 · INTEGRATE</div><h3>融入</h3><p>把安全活动嵌入开发流程、组织职责与工作产品，而不是外挂一道检查。</p></div>
+      <div class="step"><div class="n">STEP 4 · VERIFY</div><h3>验证</h3><p>通过分析、测试与故障注入形成验证确认闭环，让结论有证据。</p></div>
+    </div>
+  </section>
+
+  <!-- 教育与语言 -->
+  <section id="education" class="reveal">
+    <div class="sec-head">
+      <div class="no">06 — EDUCATION &amp; LANGUAGES</div>
+      <h2>教育与语言</h2>
+    </div>
+    <div class="edu-grid">
+      <div class="edu">
+        <div class="when">2015 – 2018</div>
+        <h3>德国达姆斯塔特工业大学</h3>
+        <p>机械与过程工程 · 硕士（成绩：优）</p>
+      </div>
+      <div class="edu">
+        <div class="when">2010 – 2015</div>
+        <h3>同济大学</h3>
+        <p>工程力学 · 学士（计算机辅助工程方向，成绩前 15%）</p>
+      </div>
+    </div>
+    <div class="langs">
+      <div class="lang"><b>中文</b><span>母语</span></div>
+      <div class="lang"><b>英语</b><span>IELTS 7.5</span></div>
+      <div class="lang"><b>德语</b><span>TestDaF 4×4</span></div>
+    </div>
+  </section>
+
+
+  <!-- 专业文章 -->
+  <section id="works" class="reveal">
+    <div class="sec-head">
+      <div class="no">07 — WRITING</div>
+      <h2>专业文章</h2>
+    </div>
+    <div class="work">
+      <h3>《汽车安全科普》系列</h3>
+      <div class="meta">共 9 篇 · 已完结 · 图多字少 · 面向普通车主</div>
+      <p>沿着机械 → 电控 → 复杂环境感知 → AI 这条进化线，把 ISO 26262、ISO 21448、ISO/PAS 8800 三大标准讲给普通车主听：不推销任何车，只讲清每一种安全背后的道理。</p>
+      <div class="episodes">
+        <div class="ep">
+          <span class="idx">第 1 篇</span>
+          <div>
+            <div class="t">总览：车“坏”的方式，变了四次</div>
+            <div class="d">先纠正一个流行说法——软件故障、电气故障，在汽车安全里同样算“坏了”，只是坏得看不见。</div>
+          </div>
+          <span class="status"><a href="汽车安全科普 · 第1篇 总览.html">已上线</a></span>
+        </div>
+        <div class="ep">
+          <span class="idx">第 2 篇</span>
+          <div>
+            <div class="t">辅助驾驶和自动驾驶：能撒手吗？</div>
+            <div class="d">分级只看一条线——谁在开车、出事谁负责。功能安全、预期功能安全、AI 安全三种安全，在这一篇汇合。</div>
+          </div>
+          <span class="status"><a href="汽车安全科普 · 第2篇 辅助驾驶和自动驾驶.html">已上线</a></span>
+        </div>
+        <div class="ep">
+          <span class="idx">第 3 篇</span>
+          <div>
+            <div class="t">电动化：失控、起火、触电，哪儿最要命？</div>
+            <div class="d">油车最怕漏油起火；电车多出三样：电机失控会自己窜、电池失控会自己烧、几百伏高压还能电死人——哪儿最要命，这篇挨个拆。</div>
+          </div>
+          <span class="status"><a href="汽车安全科普 · 第6篇 电动化.html">已上线</a></span>
+        </div>
+        <div class="ep">
+          <span class="idx">第 4 篇</span>
+          <div>
+            <div class="t">智能座舱：那块大屏，是帮手还是对手？</div>
+            <div class="d">大屏很好玩，安全怎么算：分心、误触、语音误唤醒和驾驶员监控，座舱的安全横跨功能安全和预期功能安全两条线。</div>
+          </div>
+          <span class="status"><a href="汽车安全科普 · 第5篇 智能座舱.html">已上线</a></span>
+        </div>
+        <div class="ep">
+          <span class="idx">第 5 篇</span>
+          <div>
+            <div class="t">功能安全：车“坏了”之后，谁来兜底？</div>
+            <div class="d">功能安全不研究车怎么不出故障，只管“坏了之后”怎么兜底——两种失效、ASIL 分级、冗余/监控/安全状态三招。</div>
+          </div>
+          <span class="status"><a href="汽车安全科普 · 第2篇 功能安全.html">已上线</a></span>
+        </div>
+        <div class="ep">
+          <span class="idx">第 6 篇</span>
+          <div>
+            <div class="t">预期功能安全：没坏，也会出事？</div>
+            <div class="d">零件一个没坏，车也会出事——看错了、没见过、接不住，再看广告牌误识别与幽灵刹车两种根，帮你分清它归谁管。</div>
+          </div>
+          <span class="status"><a href="汽车安全科普 · 第3篇 预期功能安全.html">已上线</a></span>
+        </div>
+        <div class="ep">
+          <span class="idx">第 7 篇</span>
+          <div>
+            <div class="t">AI 安全：AI 上车后的新麻烦</div>
+            <div class="d">AI 上车后，麻烦从‘坏了、看错了’变成了‘学偏了、没见过、说不清还会变’——数据、长尾场景和模型的判断本身，都成了新的安全账。</div>
+          </div>
+          <span class="status"><a href="汽车安全科普 · 第4篇 AI安全.html">已上线</a></span>
+        </div>
+        <div class="ep">
+          <span class="idx">第 8 篇</span>
+          <div>
+            <div class="t">案例拆解</div>
+            <div class="d">同样一脚急刹，背后可能是四种完全不同的问题——先分清哪一环出了问题，再判断到底怪谁。</div>
+          </div>
+          <span class="status"><a href="汽车安全科普 · 第7篇 案例拆解.html">已上线</a></span>
+        </div>
+        <div class="ep">
+          <span class="idx">第 9 篇</span>
+          <div>
+            <div class="t">消费者行动清单</div>
+            <div class="d">不讲新概念，把前面的道理变成三份能直接照着做的清单：买车问边界、试驾看交接、用车留证据。</div>
+          </div>
+          <span class="status"><a href="汽车安全科普 · 第8篇 消费者行动清单.html">已上线</a></span>
+        </div>
+      </div>
+      <p class="channels">在 <b>公众号「欣和路」</b>、<b>抖音「欣和路」</b>、<b>B站「欣和路」</b> 同步更新（搜索账号名即可找到，扫码关注见下方）。</p>
+    </div>
+  </section>
+
+  <!-- 关注 -->
+  <section id="follow" class="reveal">
+    <div class="sec-head">
+      <div class="no">08 — FOLLOW</div>
+      <h2>关注</h2>
+    </div>
+    <div class="qr-grid">
+      <div class="qr-card">
+        <a href="assets/qr-wechat.jpg"><img class="qr-img" src="assets/qr-wechat.jpg" alt="微信公众号「欣和路」二维码"></a>
+        <h3>微信公众号</h3><div class="acct">欣和路</div>
+        <div class="hint">扫码关注公众号</div>
+      </div>
+      <div class="qr-card">
+        <a href="assets/qr-douyin.jpg"><img class="qr-img" src="assets/qr-douyin.jpg" alt="抖音「欣和路」二维码"></a>
+      </div>
+      <div class="qr-card">
+        <a href="assets/qr-bilibili.jpg"><img class="qr-img" src="assets/qr-bilibili.jpg" alt="B站「欣和路」二维码"></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 联系 -->
+  <section id="contact" class="reveal">
+    <div class="sec-head">
+      <div class="no">09 — CONTACT</div>
+      <h2>联系交流</h2>
+    </div>
+    <div class="contact">
+      <h2>同行交流</h2>
+      <p>欢迎围绕功能安全、预期功能安全、AI Safety 与智能系统安全工程实践开展同行交流与专业讨论。</p>
+      <a class="mail" href="mailto:xulu_wannian@163.com">xulu_wannian@163.com</a>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site">
+  <div class="wrap foot">
+    <div>© 2026 许路 · 让智能系统，安全地运行 · 《汽车安全科普》全 9 篇已完结</div>
+  </div>
+</footer>
+
+<script>
+  // 滚动进入视口时淡入（无外部依赖）
+  (function(){
+    var els = document.querySelectorAll('.reveal');
+    if(!('IntersectionObserver' in window)){ els.forEach(function(e){e.classList.add('in')}); return; }
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){ if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); } });
+    },{threshold:.12});
+    els.forEach(function(e){ io.observe(e); });
+  })();
+</script>
+</body>
+</html>
